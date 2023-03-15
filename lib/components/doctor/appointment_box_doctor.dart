@@ -1,27 +1,28 @@
+//import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/constants.dart';
 
-class appointment_box extends StatelessWidget {
-  final DateTime dateTime;
-  final Appointment appointment;
+class AppointmentBoxDoctor extends StatelessWidget {
+  //final DateTime dateTime;
+  //final Appointment appointment;
   final Size size;
 
-  const appointment_box({
+  const AppointmentBoxDoctor({
     Key? key,
-    required this.dateTime,
-    required this.appointment,
     required this.size,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
+    //  DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
     return Container(
-      height: size.height * 0.16,
-      width: size.width * 0.8,
+      height: 158,
+      width: 328,
       margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -114,7 +115,7 @@ class appointment_box extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
                             Text(
-                              'Doctor:',
+                              'Patient:',
                               style: TextStyle(
                                 color: Color(0xffababab),
                                 fontSize: 17,
