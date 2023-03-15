@@ -27,18 +27,6 @@ class AppointmentBoxDoctor extends StatelessWidget {
           height: 230,
           width: 328,
           margin: const EdgeInsets.only(top: 16),
-          // decoration: BoxDecoration(
-          //   color: Colors.white,
-          //   borderRadius: BorderRadius.circular(5),
-          //   boxShadow: [
-          //     BoxShadow(
-          //       color: myConstants.primaryColor.withOpacity(.4),
-          //       spreadRadius: 3,
-          //       blurRadius: 8,
-          //       offset: const Offset(0, 3),
-          //     ),
-          //   ],
-          // ),
           child: Column(
             children: [
               Row(
