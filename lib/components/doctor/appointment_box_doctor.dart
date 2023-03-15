@@ -19,14 +19,12 @@ class AppointmentBoxDoctor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    //  DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
     return Card(
       elevation: 6,
       child:
-        Container(
+        SizedBox(
           height: 230,
           width: 328,
-          margin: const EdgeInsets.only(top: 16),
           child: Column(
             children: [
               Row(
@@ -123,7 +121,6 @@ class AppointmentBoxDoctor extends StatelessWidget {
                               ],
                             ),
                           ),
-
                         ],
                       ),
                     ],
@@ -170,7 +167,7 @@ class AppointmentBoxDoctor extends StatelessWidget {
               ),
             ],
           ),
-        )
+        ),
     );
   }
 }
