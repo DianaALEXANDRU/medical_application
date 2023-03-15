@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "654083888078",
+    "project_id": "fluttermedicalapp-ab48a",
+    "storage_bucket": "fluttermedicalapp-ab48a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654083888078:android:a592dff6b96332df68d19f",
+        "android_client_info": {
+          "package_name": "com.example.medical_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "654083888078-nkliqo6c5kiirdd3odf8k4fdch27nodq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq7dNLPaYGprV-IweaGoCIgDdb-lJTWBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654083888078-nkliqo6c5kiirdd3odf8k4fdch27nodq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
