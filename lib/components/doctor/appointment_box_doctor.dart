@@ -21,7 +21,7 @@ class AppointmentBoxDoctor extends StatelessWidget {
     Constants myConstants = Constants();
     //  DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
     return Container(
-      height: 158,
+      height: 230,
       width: 328,
       margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
@@ -132,17 +132,45 @@ class AppointmentBoxDoctor extends StatelessWidget {
                           ],
                         ),
                       ),
+
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Stack(
+                    children: [
                       Container(
-                          margin: const EdgeInsets.only(left: 216, top: 24),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red.shade700,
-                            ),
-                            child: const Text(
-                              'Cancel',
-                            ),
-                          )),
+                        margin: const EdgeInsets.only(left: 24, top: 24),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          child: const Text(
+                            'Add Document',
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(left: 216, top: 24),
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red.shade700,
+                          ),
+                          child: const Text(
+                            'Cancel',
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
