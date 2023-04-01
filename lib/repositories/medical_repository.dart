@@ -10,7 +10,11 @@ abstract class MedicalRepository {
 
   Future<List<Category>> fetchCategories();
 
-  Future<List<Appointment>> fetchAppointments(int userId);
+  Future<List<Appointment>> fetchAppointmentsForUser(String userId);
+
+  Future<List<Appointment>> fetchAppointmentsForDoctor(String doctorId);
 
   Future<UserClass> fetchUser();
+
+  Future<void> deleteAppointment(String appointmentId);
 }

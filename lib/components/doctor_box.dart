@@ -22,7 +22,8 @@ class DoctorWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DoctorDetailsScreen(doctor: doctor)),
+            builder: (context) => DoctorDetailsScreen(doctor: doctor),
+          ),
         );
       },
       child: Container(
@@ -66,7 +67,7 @@ class DoctorWidget extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(top: 10),
                     child: Text(
-                      'Dr. ' + doctor.name,
+                      'Dr. ${doctor.firstName} ${doctor.lastName}',
                       style: const TextStyle(
                         color: Color(0xff363636),
                         fontSize: 17,
@@ -91,21 +92,21 @@ class DoctorWidget extends StatelessWidget {
                             left: size.width * 0.25,
                           ),
                           child: Row(
-                            children: [
-                              const Icon(
+                            children: const [
+                              Icon(
                                 Icons.star,
                                 color: Colors.amber,
                               ),
                               Text(
-                                doctor.rating,
-                                style: const TextStyle(
+                                '5',
+                                style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 12,
                                 ),
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),

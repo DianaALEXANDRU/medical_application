@@ -67,3 +67,13 @@ class PasswordReset extends AuthEvent {
         email,
       ];
 }
+
+class FetchUser extends AuthEvent {
+  const FetchUser();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
+}

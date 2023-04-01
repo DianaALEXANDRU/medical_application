@@ -26,4 +26,6 @@ abstract class AuthRepository {
   Future<void> logOut();
 
   Future<UserClass> fetchUser();
+
+  Future<Doctor> fetchDoctor();
 }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medical_application/bloc/medical_bloc.dart';
+import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/constants.dart';
+import 'package:medical_application/utill/helpers.dart';
+import 'package:medical_application/utill/utillity.dart';
 
 class appointment_box extends StatelessWidget {
-  final DateTime dateTime;
   final Appointment appointment;
   final Size size;
 
   const appointment_box({
     Key? key,
-    required this.dateTime,
     required this.appointment,
     required this.size,
   }) : super(key: key);
@@ -18,9 +20,12 @@ class appointment_box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
+    var doctor = Helpers.findDoctorById(
+      getIt<MedicalBloc>().state.doctors,
+      appointment.doctorId,
+    );
     return Container(
-      height: size.height * 0.16,
+      height: size.height * 0.20,
       width: size.width * 0.8,
       margin: const EdgeInsets.only(top: 16),
       decoration: BoxDecoration(
@@ -50,8 +55,8 @@ class appointment_box extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Date:',
                               style: TextStyle(
                                 color: Color(0xffababab),
@@ -60,8 +65,8 @@ class appointment_box extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '20 Decembrie 2023',
-                              style: TextStyle(
+                              DateFormat('dd/MM/yyyy').format(appointment.date),
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
                               ),
@@ -74,8 +79,8 @@ class appointment_box extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Time:',
                               style: TextStyle(
                                 color: Color(0xffababab),
@@ -84,8 +89,8 @@ class appointment_box extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              '13:10',
-                              style: TextStyle(
+                              Utility.formatTimeOfDay(appointment.time),
+                              style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
                               ),
@@ -112,8 +117,8 @@ class appointment_box extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               'Doctor:',
                               style: TextStyle(
                                 color: Color(0xffababab),
@@ -121,13 +126,14 @@ class appointment_box extends StatelessWidget {
                                 fontWeight: FontWeight.w300,
                               ),
                             ),
-                            Text(
-                              'Alexandru Costel',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 17,
+                            if (doctor != null)
+                              Text(
+                                doctor.firstName + ' ' + doctor.lastName,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
                           ],
                         ),
                       ),

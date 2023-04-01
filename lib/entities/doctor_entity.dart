@@ -4,52 +4,71 @@ import 'package:meta/meta.dart';
 @immutable
 class DoctorEntity extends Equatable {
   static const String fieldId = 'id';
-  static const String fieldName = 'name';
-  static const String fieldImageUrl = 'image_url';
+  static const String fieldFirstName = 'first_name';
+  static const String fieldLastName = 'last_name';
+  static const String fieldPhoneNo = 'phone_no';
+  static const String fieldRole = 'role';
   static const String fieldDescription = 'description';
+  static const String fieldExperience = 'experience';
+  static const String fieldImageUrl = 'image_url';
   static const String fieldCategory = 'category';
-  static const String fieldRating = 'rating';
 
-  final int id;
-  final String name;
-  final String imageUrl;
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String phoneNo;
+  final String role;
   final String description;
+  final String experience;
+  final String imageUrl;
   final String category;
-  final String rating;
 
   const DoctorEntity({
     required this.id,
-    required this.name,
-    required this.imageUrl,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNo,
+    required this.role,
     required this.description,
+    required this.experience,
+    required this.imageUrl,
     required this.category,
-    required this.rating,
   });
 
   static DoctorEntity fromJson(Map<String, dynamic> json) => DoctorEntity(
-      id: json[fieldId],
-      name: json[fieldName],
-      imageUrl: json[fieldImageUrl] ?? '',
-      description: json[fieldDescription] ?? '',
-      category: json[fieldCategory] ?? '',
-      rating: json[fieldRating] ?? '');
+        id: json[fieldId],
+        firstName: json[fieldFirstName],
+        lastName: json[fieldLastName],
+        phoneNo: json[fieldPhoneNo],
+        role: json[fieldRole],
+        description: json[fieldDescription] ?? '',
+        experience: json[fieldExperience],
+        imageUrl: json[fieldImageUrl] ?? '',
+        category: json[fieldCategory] ?? '',
+      );
 
   Map<String, dynamic> toJson() => {
         fieldId: id,
-        fieldName: name,
-        fieldImageUrl: imageUrl,
+        fieldFirstName: firstName,
+        fieldLastName: lastName,
+        fieldPhoneNo: phoneNo,
+        fieldRole: role,
         fieldDescription: description,
+        fieldExperience: experience,
+        fieldImageUrl: imageUrl,
         fieldCategory: category,
-        fieldRating: rating,
       };
 
   @override
   List<Object> get props => [
         id,
-        name,
-        imageUrl,
+        firstName,
+        lastName,
+        phoneNo,
+        role,
         description,
+        experience,
+        imageUrl,
         category,
-        rating,
       ];
 }

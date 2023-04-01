@@ -20,9 +20,10 @@ class CategoryWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => DoctorScreen(
-                    category: category.name,
-                  )),
+            builder: (context) => DoctorScreen(
+              category: category.name,
+            ),
+          ),
         );
       },
       child: Container(

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/screens/register_screen.dart';
 
-class gradient_button extends StatelessWidget {
+class GradientButton extends StatelessWidget {
   final String text;
   final Size size;
 
-  const gradient_button({
+  const GradientButton({
     Key? key,
     required this.text,
     required this.size,
@@ -18,11 +17,7 @@ class gradient_button extends StatelessWidget {
     return SizedBox(
       height: 50.0,
       child: ElevatedButton(
-        onPressed: () {
-          // Navigator.of(context).push(
-          //   MaterialPageRoute(builder: (context) => const Register()),
-          // );
-        },
+        onPressed: () {},
         style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
         ),

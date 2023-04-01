@@ -22,7 +22,6 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: myConstants.contrastColor,
-        //extendBodyBehindAppBar: true,
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: myConstants.primaryColor,

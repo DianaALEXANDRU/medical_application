@@ -37,8 +37,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
       results = _allDoctors;
     } else {
       results = _allDoctors
-          .where((doctor) =>
-              doctor.name.toLowerCase().contains(_filter.toLowerCase()))
+          .where((doctor) => (doctor.firstName + ' ' + doctor.lastName)
+              .toLowerCase()
+              .contains(_filter.toLowerCase()))
           .toList();
     }
 

@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:medical_application/entities/doctor_entity.dart';
 import 'package:medical_application/entities/user_entity.dart';
-import 'package:medical_application/models/appointment.dart';
-import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/auth_repository.dart';
@@ -100,26 +97,45 @@ class AuthRepositoryFirestore extends AuthRepository {
   Future<UserClass> fetchUser() async {
     final id = FirebaseAuth.instance.currentUser?.uid;
 
-    // Get the document reference from Firestore
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection('users').doc(id);
 
-    // Get the document snapshot from Firestore
     DocumentSnapshot documentSnapshot = await documentReference.get();
-    print(
-        '#######################################Docrument refarances: $documentReference');
-    print(
-        '#######################################Docrument snapshot: $documentSnapshot');
-    // Convert the document data to a JSON string
+
     Map<String, dynamic> jsonData =
         documentSnapshot.data() as Map<String, dynamic>;
 
-    jsonData['id'] = id; // Add the extra field with the uid
-
-    String jsonString = jsonEncode(jsonData);
+    jsonData['id'] = id;
 
     UserEntity currentUser = UserEntity.fromJson(jsonData);
 
     return UserClass.fromEntity(currentUser);
+  }
+
+  @override
+  Future<Doctor> fetchDoctor() async {
+    final id = FirebaseAuth.instance.currentUser?.uid;
+
+    DocumentSnapshot userDetails =
+        await FirebaseFirestore.instance.collection('users').doc(id).get();
+
+    DocumentSnapshot doctorDetails =
+        await FirebaseFirestore.instance.collection('doctor').doc(id).get();
+
+    Map<String, dynamic> combinedMap = {
+      'id': id,
+      'first_name': userDetails.get('first_name'),
+      'last_name': userDetails.get('last_name'),
+      'phone_no': userDetails.get('phone_no'),
+      'role': userDetails.get('role'),
+      'description': doctorDetails.get('description'),
+      'experience': doctorDetails.get('experience'),
+      'image_url': doctorDetails.get('image_url'),
+      'category': doctorDetails.get('category'),
+    };
+
+    DoctorEntity doctor = DoctorEntity.fromJson(combinedMap);
+
+    return Doctor.fromEntity(doctor);
   }
 }

@@ -1,18 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:get_it/get_it.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
-import 'package:medical_application/repositories/auth_repository.dart';
 import 'package:medical_application/repositories/firestore/auth_repository.dart';
 import 'package:medical_application/repositories/rest/medical_repository.dart';
-import 'package:medical_application/screens/home_screen.dart';
-import 'package:medical_application/screens/login_screen.dart';
 import 'package:medical_application/screens/main_page.dart';
-
-import 'package:medical_application/screens/welcome_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -41,11 +35,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
 
+    //FirebaseAuth.instance.signOut();
     var medicalRepository = MedicalRestRepository();
     _medicalBloc = MedicalBloc(medicalRepository: medicalRepository);
     getIt.registerSingleton(_medicalBloc);
 
-    // initialization
     _medicalBloc.add(const FetchDoctors());
     _medicalBloc.add(const FetchCategories());
 

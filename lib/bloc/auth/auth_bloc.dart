@@ -16,18 +16,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required this.authRepository,
   }) : super(
-          AuthState(),
+          const AuthState(),
         ) {
     on<Register>(_handleRegister);
     on<LogIn>(_handleLogIn);
     on<PasswordReset>(_handlePasswordReset);
+    on<FetchUser>(_handleFetchUser);
+  }
+
+  Future<void> _handleFetchUser(
+    FetchUser event,
+    Emitter<AuthState> emit,
+  ) async {
+    UserClass user = await authRepository.fetchUser();
+    emit(
+      state.copyWith(
+        user: user,
+      ),
+    );
   }
 
   Future<void> _handleRegister(
     Register event,
     Emitter<AuthState> emit,
   ) async {
-    authRepository.register(
+    await authRepository.register(
       firstName: event.firstName,
       lastName: event.lastName,
       phoneNo: event.phoneNo,
@@ -35,34 +48,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
     );
 
-    //TODO emit user
-
     UserClass user = await authRepository.fetchUser();
     emit(
       state.copyWith(
         user: user,
       ),
     );
-    print('#############INbloc ${user}');
   }
 
   Future<void> _handleLogIn(
     LogIn event,
     Emitter<AuthState> emit,
   ) async {
-    authRepository.logIn(
+    await authRepository.logIn(
       email: event.email,
       password: event.password,
     );
 
-    //TODO emit user
     UserClass user = await authRepository.fetchUser();
     emit(
       state.copyWith(
         user: user,
       ),
     );
-    print('#############INbloc ${user}');
   }
 
   Future<void> _handlePasswordReset(
@@ -72,7 +80,5 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     authRepository.passwordReset(
       email: event.email,
     );
-
-    //TODO emit user
   }
 }

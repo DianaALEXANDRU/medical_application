@@ -31,11 +31,6 @@ class NavBarDoctor extends StatelessWidget {
             title: const Text('Program'),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const DoctorScreen(category: '')),
-              // );
             },
           ),
           ListTile(
@@ -43,11 +38,6 @@ class NavBarDoctor extends StatelessWidget {
             title: const Text('Appointments'),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const MyAppointments()),
-              // );
             },
           ),
           const Divider(),
@@ -56,11 +46,6 @@ class NavBarDoctor extends StatelessWidget {
             title: const Text('My Doctor Details'),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const ProfileWidget()),
-              // );
             },
           ),
           ListTile(
@@ -68,11 +53,6 @@ class NavBarDoctor extends StatelessWidget {
             title: const Text('My Profile'),
             onTap: () {
               Navigator.pop(context);
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //       builder: (context) => const ProfileWidget()),
-              // );
             },
           ),
           const ListTile(

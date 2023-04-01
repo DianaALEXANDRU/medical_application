@@ -64,7 +64,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                 bottom: 16,
                               ),
                               child: appointment_box(
-                                dateTime: DateTime.now(),
                                 appointment: medicalState.appointments[index],
                                 size: size,
                               ),
@@ -82,7 +81,6 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                 bottom: 16,
                               ),
                               child: appointment_box(
-                                dateTime: DateTime.now(),
                                 appointment: medicalState.appointments[index],
                                 size: size,
                               ),

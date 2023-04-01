@@ -1,25 +1,26 @@
 import 'package:equatable/equatable.dart';
-import 'package:medical_application/entities/doctor_entity.dart';
+import 'package:flutter/material.dart';
+import 'package:medical_application/utill/utillity.dart';
 import 'package:meta/meta.dart';
 
 @immutable
 class AppointmentEntity extends Equatable {
   static const String fieldId = 'id';
-  static const String fieldPatient = 'patient';
-  static const String fieldDoctor = 'doctor';
+  static const String fieldPatientId = 'patient_id';
+  static const String fieldDoctorId = 'doctor_id';
   static const String fieldDate = 'date';
   static const String fieldTime = 'time';
 
-  final int id;
-  final String patient;
-  final DoctorEntity doctor; // Doctor entity
-  final String date;
-  final String time;
+  final String id;
+  final String patientId;
+  final String doctorId; // Doctor entity
+  final DateTime date;
+  final TimeOfDay time;
 
   const AppointmentEntity({
     required this.id,
-    required this.patient,
-    required this.doctor,
+    required this.patientId,
+    required this.doctorId,
     required this.date,
     required this.time,
   });
@@ -27,16 +28,16 @@ class AppointmentEntity extends Equatable {
   static AppointmentEntity fromJson(Map<String, dynamic> json) =>
       AppointmentEntity(
         id: json[fieldId],
-        patient: json[fieldPatient],
-        doctor: DoctorEntity.fromJson(json[fieldDoctor]),
-        date: json[fieldDate] ?? '',
-        time: json[fieldTime] ?? '',
+        patientId: json[fieldPatientId],
+        doctorId: json[fieldDoctorId],
+        date: Utility.stringToDateTime(json[fieldDate]),
+        time: Utility.stringToTimeOfDay(json[fieldTime]),
       );
 
   Map<String, dynamic> toJson() => {
         fieldId: id,
-        fieldPatient: patient,
-        fieldDoctor: doctor,
+        fieldPatientId: patientId,
+        fieldDoctorId: doctorId,
         fieldDate: date,
         fieldTime: time,
       };
@@ -44,8 +45,8 @@ class AppointmentEntity extends Equatable {
   @override
   List<Object> get props => [
         id,
-        patient,
-        doctor,
+        patientId,
+        doctorId,
         date,
         time,
       ];

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/entities/appointment_entity.dart';
 import 'package:medical_application/models/doctor.dart';
@@ -6,48 +7,45 @@ import 'package:meta/meta.dart';
 
 @immutable
 class Appointment extends Equatable {
-  final int id;
-  final String patient;
-  final Doctor doctor;
+  final String id;
+  final String patientId;
+  final String doctorId;
   final DateTime date;
-
-  // final String time;
-
-  //DateFormat dateFormat = DateFormat('dd MMMM yyyy        HH:mm');
+  final TimeOfDay time;
 
   const Appointment({
     required this.id,
-    required this.patient,
-    required this.doctor,
+    required this.patientId,
+    required this.doctorId,
     required this.date,
-    // required this.time,
+    required this.time,
   });
 
   static Appointment fromEntity(AppointmentEntity entity) => Appointment(
         id: entity.id,
-        patient: entity.patient,
-        doctor: Doctor.fromEntity(entity.doctor),
-        date: DateTime.parse(entity.date + ' ' + entity.time),
-        // time: entity.time,
+        patientId: entity.patientId,
+        doctorId: entity.doctorId,
+        date: entity.date,
+        time: entity.time,
       );
 
   AppointmentEntity toEntity() => AppointmentEntity(
         id: id,
-        patient: patient,
-        doctor: doctor.toEntity(),
-        date: date.toString(),
-        time: DateFormat('kk:mm').format(date).toString(),
+        patientId: patientId,
+        doctorId: doctorId,
+        date: date,
+        time: time,
       );
 
   @override
-  String toString() => '$doctor($id)';
+  String toString() => '$doctorId($id)';
 
   @override
   List<Object> get props => [
         id,
-        patient,
-        doctor,
+        patientId,
+        doctorId,
         date,
-        //time,
+        time,
       ];
 }

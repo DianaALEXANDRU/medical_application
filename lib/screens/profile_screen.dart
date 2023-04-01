@@ -23,7 +23,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: getIt<AuthBloc>(),
       builder: (context, authState) {
-        // print('######### ${medicalState.user}');
         return SizedBox(
           height: size.height,
           width: size.width,
@@ -50,7 +49,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfileScreen()),
+                        builder: (context) => const ProfileScreen(),
+                      ),
                     );
                   },
                   icon: const Icon(
@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             ProfileDetailsWidget(
                               size: size,
-                              field: 'Name',
+                              field: 'First Name:',
                               details: authState.user!.firstName,
                             ),
                             const SizedBox(
@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             ProfileDetailsWidget(
                               size: size,
-                              field: 'Email',
+                              field: 'Last Name:',
                               details: authState.user!.lastName,
                             ),
                             const SizedBox(

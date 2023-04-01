@@ -39,7 +39,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
             ),
           ),
           title: Text(
-            widget.doctor.name,
+            widget.doctor.firstName + ' ' + widget.doctor.lastName,
             style: const TextStyle(
               fontSize: 23,
               fontWeight: FontWeight.w500,
@@ -95,14 +95,14 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                 Container(
                   margin: const EdgeInsets.only(top: 3, left: 20),
                   child: Row(
-                    children: [
-                      const Icon(
+                    children: const [
+                      Icon(
                         Icons.star,
                         color: Colors.amber,
                       ),
                       Text(
-                        widget.doctor.rating,
-                        style: const TextStyle(
+                        " ",
+                        style: TextStyle(
                           color: Colors.black,
                           fontSize: 17,
                         ),
@@ -121,7 +121,10 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Text(
-                    'About ' + widget.doctor.name,
+                    'About ' +
+                        widget.doctor.firstName +
+                        ' ' +
+                        widget.doctor.lastName,
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,

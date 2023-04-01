@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/medical_repository.dart';
 
 part 'medical_event.dart';
@@ -24,7 +23,7 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
         ) {
     on<FetchDoctors>(_handleFetchDoctors);
     on<FetchCategories>(_handleFetchCategories);
-    on<FetchAppointments>(_handleFetchAppointments);
+    on<FetchAppointmentsForUser>(_handleFetchAppointmentsForUser);
   }
 
   Future<void> _handleFetchDoctors(
@@ -51,12 +50,25 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     );
   }
 
-  Future<void> _handleFetchAppointments(
-    FetchAppointments event,
+  Future<void> _handleFetchAppointmentsForUser(
+    FetchAppointmentsForUser event,
     Emitter<MedicalState> emit,
   ) async {
     List<Appointment> appointments =
-        await medicalRepository.fetchAppointments(event.userId);
+        await medicalRepository.fetchAppointmentsForUser(event.userId);
+    emit(
+      state.copyWith(
+        appointments: appointments,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchAppointmentsForDoctor(
+    FetchAppointmentsForDoctor event,
+    Emitter<MedicalState> emit,
+  ) async {
+    List<Appointment> appointments =
+        await medicalRepository.fetchAppointmentsForDoctor(event.userId);
     emit(
       state.copyWith(
         appointments: appointments,

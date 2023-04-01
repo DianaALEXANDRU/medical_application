@@ -38,7 +38,8 @@ class NavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const DoctorScreen(category: '')),
+                  builder: (context) => const DoctorScreen(category: ''),
+                ),
               );
             },
           ),
@@ -50,7 +51,8 @@ class NavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const MyAppointmentsScreen()),
+                  builder: (context) => const MyAppointmentsScreen(),
+                ),
               );
             },
           ),
@@ -62,7 +64,9 @@ class NavBar extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                MaterialPageRoute(
+                  builder: (context) => const ProfileScreen(),
+                ),
               );
             },
           ),
@@ -72,7 +76,12 @@ class NavBar extends StatelessWidget {
           ),
           const Divider(),
           GestureDetector(
-            onTap: () => FirebaseAuth.instance.signOut(),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+
+              FirebaseAuth.instance.signOut();
+            },
             child: const ListTile(
               title: Text('Exit'),
               leading: Icon(Icons.exit_to_app),

@@ -49,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocBuilder<AuthBloc, AuthState>(
         bloc: getIt<AuthBloc>(),
         builder: (context, authState) {
-          print('##################################User: ${authState.user}');
           return BlocBuilder<MedicalBloc, MedicalState>(
             bloc: getIt<MedicalBloc>(),
             builder: (context, medicalState) {
@@ -184,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                        left: size.width * 0.05, ////16
+                        left: size.width * 0.05,
                         top: size.width * 0.05,
                         right: size.width * 0.05,
                       ),
