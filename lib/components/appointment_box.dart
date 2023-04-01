@@ -10,12 +10,14 @@ import 'package:medical_application/utill/utillity.dart';
 class appointment_box extends StatelessWidget {
   final Appointment appointment;
   final Size size;
+  final bool disable;
 
-  const appointment_box({
-    Key? key,
-    required this.appointment,
-    required this.size,
-  }) : super(key: key);
+  const appointment_box(
+      {Key? key,
+      required this.appointment,
+      required this.size,
+      required this.disable})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,8 @@ class appointment_box extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              DateFormat('dd/MM/yyyy').format(appointment.date),
+                              DateFormat('dd/MM/yyyy')
+                                  .format(appointment.dateAndTime),
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
@@ -89,7 +92,7 @@ class appointment_box extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              Utility.formatTimeOfDay(appointment.time),
+                              Utility.extractTime(appointment.dateAndTime),
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 17,
@@ -140,7 +143,7 @@ class appointment_box extends StatelessWidget {
                       Container(
                           margin: const EdgeInsets.only(left: 216, top: 24),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: disable == true ? null : () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red.shade700,
                             ),

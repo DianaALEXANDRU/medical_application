@@ -101,9 +101,31 @@ class MedicalRestRepository extends MedicalRepository {
   }
 
   @override
-  Future<List<Appointment>> fetchAppointmentsForDoctor(String doctorId) {
-    // TODO: implement fetchAppointmentsForDoctor
-    throw UnimplementedError();
+  Future<List<Appointment>> fetchAppointmentsForDoctor(String doctorId) async {
+    List<Appointment> appointmentsList = [];
+
+    QuerySnapshot appointmentsSnapshot = await FirebaseFirestore.instance
+        .collection('appointments')
+        .where('doctor_id', isEqualTo: doctorId)
+        .get();
+
+    for (DocumentSnapshot app in appointmentsSnapshot.docs) {
+      String uid = app.id;
+
+      Map<String, dynamic> appointmentMap = {
+        'id': uid,
+        'patient_id': app.get('patient_id'),
+        'doctor_id': app.get('doctor_id'),
+        'date': app.get('date'),
+        'time': app.get('time'),
+      };
+
+      AppointmentEntity appointment =
+          AppointmentEntity.fromJson(appointmentMap);
+
+      appointmentsList.add(Appointment.fromEntity(appointment));
+    }
+    return appointmentsList;
   }
 
   @override

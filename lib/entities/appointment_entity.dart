@@ -14,15 +14,13 @@ class AppointmentEntity extends Equatable {
   final String id;
   final String patientId;
   final String doctorId; // Doctor entity
-  final DateTime date;
-  final TimeOfDay time;
+  final DateTime dateAndTime;
 
   const AppointmentEntity({
     required this.id,
     required this.patientId,
     required this.doctorId,
-    required this.date,
-    required this.time,
+    required this.dateAndTime,
   });
 
   static AppointmentEntity fromJson(Map<String, dynamic> json) =>
@@ -30,16 +28,16 @@ class AppointmentEntity extends Equatable {
         id: json[fieldId],
         patientId: json[fieldPatientId],
         doctorId: json[fieldDoctorId],
-        date: Utility.stringToDateTime(json[fieldDate]),
-        time: Utility.stringToTimeOfDay(json[fieldTime]),
+        dateAndTime:
+            Utility.combineDateAndTime(json[fieldDate], json[fieldTime]),
       );
 
   Map<String, dynamic> toJson() => {
         fieldId: id,
         fieldPatientId: patientId,
         fieldDoctorId: doctorId,
-        fieldDate: date,
-        fieldTime: time,
+        fieldDate: dateAndTime,
+        fieldTime: '', //TODO fa split la date and time si aici si la fieldDate
       };
 
   @override
@@ -47,7 +45,6 @@ class AppointmentEntity extends Equatable {
         id,
         patientId,
         doctorId,
-        date,
-        time,
+        dateAndTime,
       ];
 }

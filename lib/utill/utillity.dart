@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 abstract class Utility {
-  static DateTime stringToDateTime(String dateString) {
-    final DateFormat formatter = DateFormat('dd/MM/yyyy');
-    final DateTime date = formatter.parse(dateString);
-
-    return date;
+  static DateTime combineDateAndTime(String date, String time) {
+    DateTime dateAndTime =
+        DateFormat("dd/MM/yyyy hh:mm").parse(date + ' ' + time);
+    return dateAndTime;
   }
 
-  static TimeOfDay stringToTimeOfDay(String timeString) {
-    final format = DateFormat.Hm();
-    final time = format.parse(timeString);
-    return TimeOfDay.fromDateTime(time);
+  static String extractTime(DateTime dateAndTime) {
+    String formattedTime = DateFormat.Hm().format(dateAndTime);
+    return formattedTime;
   }
 
-  static String formatTimeOfDay(TimeOfDay time) {
-    String hour = (time.hour < 10) ? '0${time.hour}' : '${time.hour}';
-    String minute = (time.minute < 10) ? '0${time.minute}' : '${time.minute}';
-    return '$hour:$minute';
+  static String extractDate(DateTime dateAndTime) {
+    String formattedDate = DateFormat("dd/MM/yyyy").format(dateAndTime);
+    return formattedDate;
   }
 }

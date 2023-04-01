@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/appointment_box.dart';
 import 'package:medical_application/main.dart';
+import 'package:medical_application/models/appointment.dart';
 
 class MyAppointmentsScreen extends StatefulWidget {
   const MyAppointmentsScreen({Key? key}) : super(key: key);
@@ -13,11 +14,43 @@ class MyAppointmentsScreen extends StatefulWidget {
 
 class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  List<Appointment> _runFilterUpcoming(List<Appointment> _allAppointments) {
+    List<Appointment> results = [];
+
+    results = _allAppointments
+        .where((appointment) => appointment.dateAndTime.isAfter(DateTime.now()))
+        .toList();
+
+    return results;
+  }
+
+  List<Appointment> _runFilterPast(List<Appointment> _allAppointments) {
+    List<Appointment> results = [];
+
+    results = _allAppointments
+        .where(
+            (appointment) => appointment.dateAndTime.isBefore(DateTime.now()))
+        .toList();
+
+    return results;
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    List<Appointment> _upcomingAppointments = [];
+    List<Appointment> _pastAppointments = [];
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
+        print(
+            "###########################  LUNGIME LISTA : ${medicalState.appointments.length}");
+        _upcomingAppointments = _runFilterUpcoming(medicalState.appointments);
+        _pastAppointments = _runFilterPast(medicalState.appointments);
         return DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -55,7 +88,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
               children: [
                 Expanded(
                     child: ListView.builder(
-                        itemCount: medicalState.appointments.length,
+                        itemCount: _upcomingAppointments.length,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) => Container(
                               margin: const EdgeInsets.only(
@@ -64,15 +97,16 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                 bottom: 16,
                               ),
                               child: appointment_box(
-                                appointment: medicalState.appointments[index],
+                                appointment: _upcomingAppointments[index],
                                 size: size,
+                                disable: false,
                               ),
                             ))),
 
                 //todo tab old appointment
                 Expanded(
                     child: ListView.builder(
-                        itemCount: medicalState.appointments.length,
+                        itemCount: _pastAppointments.length,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) => Container(
                               margin: const EdgeInsets.only(
@@ -81,8 +115,9 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                                 bottom: 16,
                               ),
                               child: appointment_box(
-                                appointment: medicalState.appointments[index],
+                                appointment: _pastAppointments[index],
                                 size: size,
+                                disable: true,
                               ),
                             ))),
               ],

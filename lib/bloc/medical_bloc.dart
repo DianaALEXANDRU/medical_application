@@ -24,6 +24,7 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     on<FetchDoctors>(_handleFetchDoctors);
     on<FetchCategories>(_handleFetchCategories);
     on<FetchAppointmentsForUser>(_handleFetchAppointmentsForUser);
+    on<FetchAppointmentsForDoctor>(_handleFetchAppointmentsForDoctor);
   }
 
   Future<void> _handleFetchDoctors(

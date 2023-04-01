@@ -10,31 +10,27 @@ class Appointment extends Equatable {
   final String id;
   final String patientId;
   final String doctorId;
-  final DateTime date;
-  final TimeOfDay time;
+  final DateTime dateAndTime;
 
   const Appointment({
     required this.id,
     required this.patientId,
     required this.doctorId,
-    required this.date,
-    required this.time,
+    required this.dateAndTime,
   });
 
   static Appointment fromEntity(AppointmentEntity entity) => Appointment(
         id: entity.id,
         patientId: entity.patientId,
         doctorId: entity.doctorId,
-        date: entity.date,
-        time: entity.time,
+        dateAndTime: entity.dateAndTime,
       );
 
   AppointmentEntity toEntity() => AppointmentEntity(
         id: id,
         patientId: patientId,
         doctorId: doctorId,
-        date: date,
-        time: time,
+        dateAndTime: dateAndTime,
       );
 
   @override
@@ -45,7 +41,6 @@ class Appointment extends Equatable {
         id,
         patientId,
         doctorId,
-        date,
-        time,
+        dateAndTime,
       ];
 }
