@@ -6,6 +6,8 @@ import 'package:medical_application/screens/my_appointment_screen.dart';
 import 'package:medical_application/screens/profile_screen.dart';
 
 class NavBar extends StatelessWidget {
+  const NavBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();

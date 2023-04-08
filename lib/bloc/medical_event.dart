@@ -14,6 +14,16 @@ class FetchDoctors extends MedicalEvent {
   List<Object?> get props => [];
 }
 
+class FetchUsers extends MedicalEvent {
+  const FetchUsers();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchCategories extends MedicalEvent {
   const FetchCategories();
 
@@ -46,4 +56,14 @@ class FetchAppointmentsForDoctor extends MedicalEvent {
 
   @override
   List<Object?> get props => [userId];
+}
+
+class FetchReviews extends MedicalEvent {
+  const FetchReviews();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
 }

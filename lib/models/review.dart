@@ -1,38 +1,42 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:medical_application/entities/appointment_entity.dart';
+import 'package:medical_application/entities/review_entity.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class Appointment extends Equatable {
+class Review extends Equatable {
   final String id;
   final String patientId;
   final String doctorId;
   final DateTime dateAndTime;
-  final bool confirmed;
+  final String comment;
+  final int stars;
 
-  const Appointment({
+  const Review({
     required this.id,
     required this.patientId,
     required this.doctorId,
     required this.dateAndTime,
-    required this.confirmed,
+    required this.comment,
+    required this.stars,
   });
 
-  static Appointment fromEntity(AppointmentEntity entity) => Appointment(
+  static Review fromEntity(ReviewEntity entity) => Review(
         id: entity.id,
         patientId: entity.patientId,
         doctorId: entity.doctorId,
         dateAndTime: entity.dateAndTime,
-        confirmed: entity.confirmed,
+        comment: entity.comment,
+        stars: entity.stars,
       );
 
-  AppointmentEntity toEntity() => AppointmentEntity(
+  ReviewEntity toEntity() => ReviewEntity(
         id: id,
         patientId: patientId,
         doctorId: doctorId,
         dateAndTime: dateAndTime,
-        confirmed: confirmed,
+        comment: comment,
+        stars: stars,
       );
 
   @override
@@ -44,6 +48,7 @@ class Appointment extends Equatable {
         patientId,
         doctorId,
         dateAndTime,
-        confirmed,
+        comment,
+        stars,
       ];
 }

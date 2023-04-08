@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/appointment_box.dart';
+import 'package:medical_application/components/doctor/appointment_box_doctor.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
+import 'package:medical_application/utill/utillity.dart';
 
-class MyAppointmentsScreen extends StatefulWidget {
-  const MyAppointmentsScreen({Key? key}) : super(key: key);
+class MyAppointmentsDoctor extends StatefulWidget {
+  const MyAppointmentsDoctor({Key? key}) : super(key: key);
 
   @override
-  State<MyAppointmentsScreen> createState() => _MyAppointmentsScreenState();
+  State<MyAppointmentsDoctor> createState() => _MyAppointmentsDoctorState();
 }
 
-class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
+class _MyAppointmentsDoctorState extends State<MyAppointmentsDoctor> {
   @override
   void initState() {
     super.initState();
@@ -94,10 +97,32 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                         right: 16,
                         bottom: 16,
                       ),
-                      child: AppointmentBoxWidget(
-                        appointment: upcomingAppointments[index],
-                        size: size,
-                        disable: false,
+                      child: Column(
+                        children: [
+                          if (index == 0 ||
+                              (index > 0 &&
+                                  Utility.compareDates(
+                                          upcomingAppointments[index - 1]
+                                              .dateAndTime,
+                                          upcomingAppointments[index]
+                                              .dateAndTime) ==
+                                      false))
+                            Text(
+                              '${DateFormat.EEEE().format(
+                                upcomingAppointments[index].dateAndTime,
+                              )} ${DateFormat('dd/MM/yyyy').format(
+                                upcomingAppointments[index].dateAndTime,
+                              )}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          AppointmentBoxDoctor(
+                            app: upcomingAppointments[index],
+                            size: size,
+                            // disable: false,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -112,10 +137,32 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
                         right: 16,
                         bottom: 16,
                       ),
-                      child: AppointmentBoxWidget(
-                        appointment: pastAppointments[index],
-                        size: size,
-                        disable: true,
+                      child: Column(
+                        children: [
+                          if (index == 0 ||
+                              (index > 0 &&
+                                  Utility.compareDates(
+                                          pastAppointments[index - 1]
+                                              .dateAndTime,
+                                          pastAppointments[index]
+                                              .dateAndTime) ==
+                                      false))
+                            Text(
+                              '${DateFormat.EEEE().format(
+                                pastAppointments[index].dateAndTime,
+                              )} ${DateFormat('dd/MM/yyyy').format(
+                                pastAppointments[index].dateAndTime,
+                              )}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          AppointmentBoxDoctor(
+                            app: pastAppointments[index],
+                            size: size,
+                            // disable: false,
+                          ),
+                        ],
                       ),
                     ),
                   ),

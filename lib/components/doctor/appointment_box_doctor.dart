@@ -1,18 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:medical_application/models/constants.dart';
+import 'package:intl/intl.dart';
+import 'package:medical_application/models/appointment.dart';
+import 'package:medical_application/models/user.dart';
+import 'package:medical_application/utill/helpers.dart';
 
 class AppointmentBoxDoctor extends StatelessWidget {
   final Size size;
+  final Appointment app;
 
   const AppointmentBoxDoctor({
     Key? key,
     required this.size,
+    required this.app,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Constants myConstants = Constants();
+    UserClass? patient = findUserById(app.patientId);
     return Card(
       elevation: 6,
       child: SizedBox(
@@ -33,8 +37,8 @@ class AppointmentBoxDoctor extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 'Date:',
                                 style: TextStyle(
                                   color: Color(0xffababab),
@@ -43,8 +47,9 @@ class AppointmentBoxDoctor extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '20 Decembrie 2023',
-                                style: TextStyle(
+                                DateFormat('dd/MM/yyyy')
+                                    .format(app.dateAndTime),
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                 ),
@@ -57,8 +62,8 @@ class AppointmentBoxDoctor extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 'Time:',
                                 style: TextStyle(
                                   color: Color(0xffababab),
@@ -67,8 +72,8 @@ class AppointmentBoxDoctor extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '13:10',
-                                style: TextStyle(
+                                DateFormat('hh:mm').format(app.dateAndTime),
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                 ),
@@ -95,8 +100,8 @@ class AppointmentBoxDoctor extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
+                            children: [
+                              const Text(
                                 'Patient:',
                                 style: TextStyle(
                                   color: Color(0xffababab),
@@ -105,8 +110,8 @@ class AppointmentBoxDoctor extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'Alexandru Costel',
-                                style: TextStyle(
+                                '${patient!.firstName} ${patient.lastName}',
+                                style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
                                 ),
@@ -136,7 +141,7 @@ class AppointmentBoxDoctor extends StatelessWidget {
                               backgroundColor: Colors.green,
                             ),
                             child: const Text(
-                              'Add Document',
+                              'Confirme',
                             ),
                           ),
                         ),

@@ -77,3 +77,13 @@ class FetchUser extends AuthEvent {
   @override
   List<Object?> get props => [];
 }
+
+class FetchDoctor extends AuthEvent {
+  const FetchDoctor();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
+}

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_application/components/doctor/appointment_box_doctor.dart';
 
@@ -49,7 +48,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
       body: Center(
         child: Column(
           children: [
-            AppointmentBoxDoctor(size: size),
+            // AppointmentBoxDoctor(size: size),
           ],
         ),
       ),

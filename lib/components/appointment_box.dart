@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/constants.dart';
+import 'package:medical_application/utill/DBHelper.dart';
 import 'package:medical_application/utill/helpers.dart';
 import 'package:medical_application/utill/utillity.dart';
 
-class appointment_box extends StatelessWidget {
+class AppointmentBoxWidget extends StatelessWidget {
   final Appointment appointment;
   final Size size;
   final bool disable;
 
-  const appointment_box(
+  const AppointmentBoxWidget(
       {Key? key,
       required this.appointment,
       required this.size,
@@ -22,7 +24,7 @@ class appointment_box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    var doctor = Helpers.findDoctorById(
+    var doctor = findDoctorById(
       getIt<MedicalBloc>().state.doctors,
       appointment.doctorId,
     );
@@ -131,7 +133,7 @@ class appointment_box extends StatelessWidget {
                             ),
                             if (doctor != null)
                               Text(
-                                doctor.firstName + ' ' + doctor.lastName,
+                                '${doctor.firstName} ${doctor.lastName}',
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,
@@ -143,7 +145,47 @@ class appointment_box extends StatelessWidget {
                       Container(
                           margin: const EdgeInsets.only(left: 216, top: 24),
                           child: ElevatedButton(
-                            onPressed: disable == true ? null : () {},
+                            onPressed: disable == true
+                                ? null
+                                : () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Container(
+                                            child: AlertDialog(
+                                              title: const Text(
+                                                  'Cancel Appointment'),
+                                              content: const Text(
+                                                  'Are you sure you want to cancel your appointment?'),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('No'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    DBHelper.deleteAppointment(
+                                                        appointment.id);
+                                                    getIt<MedicalBloc>().add(
+                                                      FetchAppointmentsForUser(
+                                                          userId:
+                                                              getIt<AuthBloc>()
+                                                                  .state
+                                                                  .user!
+                                                                  .id),
+                                                    );
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('Yes'),
+                                                ),
+                                              ],
+                                              elevation: 4.0,
+                                            ),
+                                          );
+                                        });
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red.shade700,
                             ),

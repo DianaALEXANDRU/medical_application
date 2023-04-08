@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:medical_application/models/appointment.dart';
-import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
 

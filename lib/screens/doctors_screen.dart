@@ -24,20 +24,20 @@ class _DoctorScreenState extends State<DoctorScreen> {
     super.initState();
   }
 
-  List<Doctor> _runFilter(List<Doctor> _allDoctors) {
+  List<Doctor> _runFilter(List<Doctor> allDoctors) {
     List<Doctor> results = [];
     if (widget.category != '') {
-      _allDoctors = _allDoctors
+      allDoctors = allDoctors
           .where((doctor) => doctor.category
               .toLowerCase()
               .contains(widget.category.toLowerCase()))
           .toList();
     }
     if (_filter.isEmpty) {
-      results = _allDoctors;
+      results = allDoctors;
     } else {
-      results = _allDoctors
-          .where((doctor) => (doctor.firstName + ' ' + doctor.lastName)
+      results = allDoctors
+          .where((doctor) => ('${doctor.firstName} ${doctor.lastName}')
               .toLowerCase()
               .contains(_filter.toLowerCase()))
           .toList();
@@ -50,11 +50,11 @@ class _DoctorScreenState extends State<DoctorScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
-    List<Doctor> _foundDoctors = [];
+    List<Doctor> foundDoctors = [];
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
-        _foundDoctors = _runFilter(medicalState.doctors);
+        foundDoctors = _runFilter(medicalState.doctors);
         return Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
@@ -117,9 +117,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 height: 13,
               ),
               Expanded(
-                child: _foundDoctors.isNotEmpty
+                child: foundDoctors.isNotEmpty
                     ? ListView.builder(
-                        itemCount: _foundDoctors.length,
+                        itemCount: foundDoctors.length,
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) => Container(
                           margin: EdgeInsets.only(
@@ -133,13 +133,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => DoctorDetailsScreen(
-                                      doctor: _foundDoctors[index]),
+                                      doctor: foundDoctors[index]),
                                 ),
                               );
                             },
                             child: DoctorWidget(
                               size: size,
-                              doctor: _foundDoctors[index],
+                              doctor: foundDoctors[index],
                             ),
                           ),
                         ),

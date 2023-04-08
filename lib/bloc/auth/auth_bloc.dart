@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/auth_repository.dart';
 import 'package:meta/meta.dart';
@@ -22,6 +23,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LogIn>(_handleLogIn);
     on<PasswordReset>(_handlePasswordReset);
     on<FetchUser>(_handleFetchUser);
+    on<FetchDoctor>(_handleFetchDoctor);
   }
 
   Future<void> _handleFetchUser(
@@ -29,9 +31,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     UserClass user = await authRepository.fetchUser();
+    if (user.role == 'doctor') {
+      Doctor doctor = await authRepository.fetchDoctor();
+      emit(
+        state.copyWith(
+          doctor: doctor,
+        ),
+      );
+    }
     emit(
       state.copyWith(
         user: user,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchDoctor(
+    FetchDoctor event,
+    Emitter<AuthState> emit,
+  ) async {
+    Doctor doctor = await authRepository.fetchDoctor();
+    emit(
+      state.copyWith(
+        doctor: doctor,
       ),
     );
   }

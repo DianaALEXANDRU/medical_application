@@ -1,39 +1,39 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:medical_application/utill/utillity.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-class AppointmentEntity extends Equatable {
+class ReviewEntity extends Equatable {
   static const String fieldId = 'id';
   static const String fieldPatientId = 'patient_id';
   static const String fieldDoctorId = 'doctor_id';
-  static const String fieldDate = 'date';
-  static const String fieldTime = 'time';
-  static const String fieldConfirmed = 'confirmed';
+  static const String fieldDate = 'date_and_time';
+  static const String fieldComment = 'comment';
+  static const String fieldStars = 'stars';
 
   final String id;
   final String patientId;
   final String doctorId; // Doctor entity
   final DateTime dateAndTime;
-  final bool confirmed;
+  final String comment;
+  final int stars;
 
-  const AppointmentEntity({
+  const ReviewEntity({
     required this.id,
     required this.patientId,
     required this.doctorId,
     required this.dateAndTime,
-    required this.confirmed,
+    required this.comment,
+    required this.stars,
   });
 
-  static AppointmentEntity fromJson(Map<String, dynamic> json) =>
-      AppointmentEntity(
+  static ReviewEntity fromJson(Map<String, dynamic> json) => ReviewEntity(
         id: json[fieldId],
         patientId: json[fieldPatientId],
         doctorId: json[fieldDoctorId],
-        dateAndTime:
-            Utility.combineDateAndTime(json[fieldDate], json[fieldTime]),
-        confirmed: json[fieldConfirmed],
+        dateAndTime: DateTime.parse(json[fieldDate]),
+        comment: json[fieldComment],
+        stars: json[fieldStars],
       );
 
   Map<String, dynamic> toJson() => {
@@ -41,10 +41,17 @@ class AppointmentEntity extends Equatable {
         fieldPatientId: patientId,
         fieldDoctorId: doctorId,
         fieldDate: dateAndTime,
-        fieldTime: '', //TODO fa split la date and time si aici si la fieldDate,
-        fieldConfirmed: confirmed,
+        fieldComment: comment,
+        fieldStars: stars,
       };
 
   @override
-  List<Object> get props => [id, patientId, doctorId, dateAndTime, confirmed];
+  List<Object> get props => [
+        id,
+        patientId,
+        doctorId,
+        dateAndTime,
+        comment,
+        stars,
+      ];
 }

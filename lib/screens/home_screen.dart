@@ -27,12 +27,12 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  List<Category> _runFilter(List<Category> _allCategories) {
+  List<Category> _runFilter(List<Category> allCategories) {
     List<Category> results = [];
     if (_filter.isEmpty) {
-      results = _allCategories;
+      results = allCategories;
     } else {
-      results = _allCategories
+      results = allCategories
           .where(
               (cat) => cat.name.toLowerCase().contains(_filter.toLowerCase()))
           .toList();
@@ -45,16 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
-    List<Category> _foundCategories = [];
+    List<Category> foundCategories = [];
     return BlocBuilder<AuthBloc, AuthState>(
         bloc: getIt<AuthBloc>(),
         builder: (context, authState) {
           return BlocBuilder<MedicalBloc, MedicalState>(
             bloc: getIt<MedicalBloc>(),
             builder: (context, medicalState) {
-              _foundCategories = _runFilter(medicalState.categories);
+              foundCategories = _runFilter(medicalState.categories);
               return Scaffold(
-                drawer: NavBar(),
+                drawer: const NavBar(),
                 resizeToAvoidBottomInset: false,
                 backgroundColor: Colors.white,
                 appBar: AppBar(
@@ -161,13 +161,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           SizedBox(
                             height: 100,
-                            child: _foundCategories.isNotEmpty
+                            child: foundCategories.isNotEmpty
                                 ? ListView.builder(
-                                    itemCount: _foundCategories.length,
+                                    itemCount: foundCategories.length,
                                     scrollDirection: Axis.horizontal,
                                     itemBuilder: (context, index) =>
                                         CategoryWidget(
-                                      category: _foundCategories[index],
+                                      category: foundCategories[index],
                                     ),
                                   )
                                 : const Text(

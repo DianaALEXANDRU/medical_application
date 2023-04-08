@@ -2,17 +2,15 @@ part of 'auth_bloc.dart';
 
 class AuthState extends Equatable {
   final UserClass? user;
+  final Doctor? doctor;
 
   const AuthState({
     this.user,
+    this.doctor,
   });
 
-  AuthState copyWith({
-    UserClass? user,
-  }) {
-    return AuthState(
-      user: user ?? this.user,
-    );
+  AuthState copyWith({UserClass? user, Doctor? doctor}) {
+    return AuthState(user: user ?? this.user, doctor: doctor ?? this.doctor);
   }
 
   @override
@@ -21,5 +19,6 @@ class AuthState extends Equatable {
   @override
   List<Object?> get props => [
         user,
+        doctor,
       ];
 }

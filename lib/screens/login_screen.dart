@@ -1,12 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/screens/register_screen.dart';
 
 import 'forgot_password_screen.dart';
-import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback showRegisterPage;

@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
-import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/profile_box.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';

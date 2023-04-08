@@ -1,15 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/screens/auth_page.dart';
-import 'package:medical_application/screens/login_screen.dart';
 
 import 'doctor_app/home.dart';
-import 'example_screen.dart';
 import 'home_screen.dart';
 
 class MainPage extends StatelessWidget {
@@ -24,8 +21,12 @@ class MainPage extends StatelessWidget {
       listener: (context, state) async {
         final role = getIt<AuthBloc>().state.user?.role;
         if (role == 'user') {
-          getIt<MedicalBloc>().add(FetchAppointmentsForUser(
-              userId: getIt<AuthBloc>().state.user!.id));
+          getIt<MedicalBloc>().add(
+            FetchAppointmentsForUser(userId: getIt<AuthBloc>().state.user!.id),
+          );
+          getIt<MedicalBloc>().add(
+            const FetchReviews(),
+          );
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const HomeScreen(),
@@ -33,6 +34,13 @@ class MainPage extends StatelessWidget {
           );
         }
         if (role == 'doctor') {
+          getIt<MedicalBloc>().add(
+            FetchAppointmentsForDoctor(
+                userId: getIt<AuthBloc>().state.user!.id),
+          );
+          getIt<MedicalBloc>().add(
+            const FetchUsers(),
+          );
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const DoctorHome(),
