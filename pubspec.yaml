@@ -51,6 +51,8 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   rating_dialog: ^2.0.4
   rating_summary: ^1.0.2+1
+  table_calendar: ^3.0.8
+
 
 
 dev_dependencies:

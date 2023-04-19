@@ -62,7 +62,9 @@ class _ReviewWidgetState extends State<ReviewWidget> {
                 height: 8,
               ),
               Text(
-                'Date:  ${DateFormat("dd/MM/yyyy  HH:mm").format(widget.review.dateAndTime)}',
+                'Date:  ${DateFormat("dd/MM/yyyy  HH:mm").format(
+                  widget.review.dateAndTime,
+                )}',
                 style: const TextStyle(
                   color: Color(0xffababab),
                   fontSize: 16,

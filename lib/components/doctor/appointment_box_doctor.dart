@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:medical_application/bloc/medical_bloc.dart';
+import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/utill/helpers.dart';
@@ -7,11 +9,15 @@ import 'package:medical_application/utill/helpers.dart';
 class AppointmentBoxDoctor extends StatelessWidget {
   final Size size;
   final Appointment app;
+  final bool disable;
+  final bool confirme;
 
   const AppointmentBoxDoctor({
     Key? key,
     required this.size,
     required this.app,
+    required this.disable,
+    required this.confirme,
   }) : super(key: key);
 
   @override
@@ -136,7 +142,16 @@ class AppointmentBoxDoctor extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(left: 24, top: 24),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: confirme == true
+                                ? null
+                                : () {
+                                    getIt<MedicalBloc>().add(
+                                        ConfirmeAppointment(
+                                            appointmentId: app.id));
+                                    getIt<MedicalBloc>().add(
+                                        FetchAppointmentsForDoctor(
+                                            userId: app.doctorId));
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.green,
                             ),
@@ -148,7 +163,19 @@ class AppointmentBoxDoctor extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(left: 216, top: 24),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: disable == true
+                                ? null
+                                : () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return const AlertDialog(
+                                          content: Text(
+                                              "Ask the administrator to cancel the appointment."),
+                                        );
+                                      },
+                                    );
+                                  },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red.shade700,
                             ),

@@ -13,7 +13,7 @@ class ReviewEntity extends Equatable {
 
   final String id;
   final String patientId;
-  final String doctorId; // Doctor entity
+  final String doctorId;
   final DateTime dateAndTime;
   final String comment;
   final int stars;

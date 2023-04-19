@@ -1,11 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_application/models/appointment.dart';
+import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/medical_repository.dart';
+
+import '../utill/helpers.dart';
 
 part 'medical_event.dart';
 
@@ -21,8 +25,12 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
             doctors: const [],
             categories: const [],
             appointments: const [],
+            appointmentsByDoctor: const [],
             reviews: const [],
             users: const [],
+            freeHours: const [],
+            programDays: const [],
+            program: const {},
           ),
         ) {
     on<FetchDoctors>(_handleFetchDoctors);
@@ -31,6 +39,14 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     on<FetchAppointmentsForUser>(_handleFetchAppointmentsForUser);
     on<FetchAppointmentsForDoctor>(_handleFetchAppointmentsForDoctor);
     on<FetchReviews>(_handleFetchReviews);
+    on<FetchReviewsByDoctorId>(_handleFetchReviewsByDoctorId);
+    on<ConfirmeAppointment>(_handleConfirmeAppointment);
+    on<DeleteAppointment>(_handleDeleteAppointment);
+    on<EditUserDetails>(_handleEditUserDetails);
+    on<FetchFreeHours>(_handleFetchFreeHours);
+    on<AddAppointment>(_handleAddAppointment);
+    on<FetchProgramDays>(_handleFetchProgramDays);
+    on<FetchProgram>(_handleFetchProgram);
   }
 
   Future<void> _handleFetchDoctors(
@@ -88,9 +104,96 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
   ) async {
     List<Appointment> appointments =
         await medicalRepository.fetchAppointmentsForDoctor(event.userId);
+
     emit(
       state.copyWith(
-        appointments: appointments,
+        appointmentsByDoctor: appointments,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchProgramDays(
+    FetchProgramDays event,
+    Emitter<MedicalState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        programDays: [],
+      ),
+    );
+    List<int> programDays =
+        await medicalRepository.fetchProgramDays(event.doctorId);
+    programDays.sort();
+    emit(
+      state.copyWith(
+        programDays: programDays,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchProgram(
+    FetchProgram event,
+    Emitter<MedicalState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        program: {},
+      ),
+    );
+    Map<int, List<AppointmentHours>> program =
+        await medicalRepository.fetchProgram(event.doctorId);
+
+    Map<int, List<AppointmentHours>> sortedProgram = {};
+
+    program.forEach((day, hoursList) {
+      hoursList.sort((a, b) => a.startHour.compareTo(b.startHour));
+      sortedProgram[day] = hoursList;
+    });
+
+    emit(
+      state.copyWith(
+        program: sortedProgram,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchFreeHours(
+    FetchFreeHours event,
+    Emitter<MedicalState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        appointmentsByDoctor: [],
+        freeHours: [],
+      ),
+    );
+    List<Appointment> appointments =
+        await medicalRepository.fetchAppointmentsForDoctor(event.doctorId);
+    Map<int, List<AppointmentHours>> program =
+        await medicalRepository.fetchProgram(event.doctorId);
+
+    List<AppointmentHours> slots = [];
+
+    int day = getDayNumber(DateFormat('EEEE').format(event.date));
+
+    if (program.containsKey(day)) {
+      if (event.date.isAfter(DateTime.now()) ||
+          DateFormat("dd/mm/yyyy").format(event.date) ==
+              DateFormat("dd/mm/yyyy").format(DateTime.now())) {
+        var listApp = getAppByDate(appointments, event.date);
+        var listHours = sortProgram(program[day]!);
+        for (var hour in listHours) {
+          if (findHourInAppList(listApp, hour.startHour) == false &&
+              hour.startHour.compareTo(DateFormat('HH:mm').format(event.date)) >
+                  0) {
+            slots.add(hour);
+          }
+        }
+      }
+    }
+    emit(
+      state.copyWith(
+        freeHours: slots,
       ),
     );
   }
@@ -105,5 +208,52 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
         reviews: reviews,
       ),
     );
+  }
+
+  Future<void> _handleFetchReviewsByDoctorId(
+    FetchReviewsByDoctorId event,
+    Emitter<MedicalState> emit,
+  ) async {
+    List<Review> reviews =
+        await medicalRepository.fetchReviewByDoctorId(event.doctorId);
+    emit(
+      state.copyWith(
+        reviews: reviews,
+      ),
+    );
+  }
+
+  Future<void> _handleConfirmeAppointment(
+    ConfirmeAppointment event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.confirmeAppointment(event.appointmentId);
+  }
+
+  Future<void> _handleDeleteAppointment(
+    DeleteAppointment event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.deleteAppointment(event.appointmentId);
+  }
+
+  Future<void> _handleEditUserDetails(
+    EditUserDetails event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.editUserDetails(
+      event.userId,
+      event.firstName,
+      event.lastName,
+      event.phoneNo,
+    );
+  }
+
+  Future<void> _handleAddAppointment(
+    AddAppointment event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.makeAppointment(
+        event.patientId, event.doctorId, event.date, event.hour);
   }
 }

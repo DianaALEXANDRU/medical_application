@@ -5,7 +5,6 @@ import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/utill/DBHelper.dart';
 import 'package:medical_application/utill/helpers.dart';
 import 'package:medical_application/utill/utillity.dart';
 
@@ -151,38 +150,40 @@ class AppointmentBoxWidget extends StatelessWidget {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          return Container(
-                                            child: AlertDialog(
-                                              title: const Text(
-                                                  'Cancel Appointment'),
-                                              content: const Text(
-                                                  'Are you sure you want to cancel your appointment?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('No'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    DBHelper.deleteAppointment(
-                                                        appointment.id);
-                                                    getIt<MedicalBloc>().add(
-                                                      FetchAppointmentsForUser(
-                                                          userId:
-                                                              getIt<AuthBloc>()
-                                                                  .state
-                                                                  .user!
-                                                                  .id),
-                                                    );
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text('Yes'),
-                                                ),
-                                              ],
-                                              elevation: 4.0,
-                                            ),
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Cancel Appointment'),
+                                            content: const Text(
+                                                'Are you sure you want to cancel your appointment?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('No'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  getIt<MedicalBloc>().add(
+                                                    DeleteAppointment(
+                                                      appointmentId:
+                                                          appointment.id,
+                                                    ),
+                                                  );
+                                                  getIt<MedicalBloc>().add(
+                                                    FetchAppointmentsForUser(
+                                                        userId:
+                                                            getIt<AuthBloc>()
+                                                                .state
+                                                                .user!
+                                                                .id),
+                                                  );
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('Yes'),
+                                              ),
+                                            ],
+                                            elevation: 4.0,
                                           );
                                         });
                                   },

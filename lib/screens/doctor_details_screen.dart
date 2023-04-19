@@ -8,6 +8,7 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/review.dart';
+import 'package:medical_application/screens/book_appointment_screen.dart';
 import 'package:medical_application/utill/helpers.dart';
 import 'package:medical_application/utill/utillity.dart';
 import 'package:rating_dialog/rating_dialog.dart';
@@ -105,190 +106,205 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                   ),
                   body: TabBarView(
                     children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              width: size.width,
-                              height: size.height * 0.50,
-                              child: Stack(
-                                children: <Widget>[
-                                  CachedNetworkImage(
-                                    width: size.width,
-                                    height: size.height * 0.50,
-                                    imageUrl: widget.doctor.imageUrl,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Colors.white.withOpacity(1),
-                                          Colors.white.withOpacity(0.0),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    '${widget.doctor.category} Specialist',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                Container(
-                                  margin:
-                                      const EdgeInsets.only(top: 3, left: 20),
-                                  child: Row(
-                                    children: const [
-                                      Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      Text(
-                                        " ",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 17,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 50,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    'About ${widget.doctor.firstName} ${widget.doctor.lastName}',
-                                    style: const TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 20,
-                                ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            width: size.width,
+                            // height: size.height * 0.50,
+                            child: Stack(
+                              children: <Widget>[
                                 SizedBox(
                                   width: size.width,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 20,
-                                      right: 20,
+                                  height: size.height * 0.16,
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: myConstants.linearGradientBlue,
                                     ),
-                                    child: Text(
-                                      widget.doctor.description,
-                                      softWrap: true,
-                                      style: const TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                Center(
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 55,
                                       ),
-                                      textAlign: TextAlign.left,
-                                    ),
+                                      ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(6.0),
+                                        child: CachedNetworkImage(
+                                          width: size.width / 2.5,
+                                          height: size.height / 5,
+                                          imageUrl: widget.doctor.imageUrl,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 60,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Padding(
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  '${widget.doctor.category} Specialist',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 3, left: 20),
+                                child: Row(
+                                  children: const [
+                                    Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                    Text(
+                                      " ",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 50,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  'About ${widget.doctor.firstName} ${widget.doctor.lastName}',
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
+                                width: size.width,
+                                child: Padding(
                                   padding: const EdgeInsets.only(
                                     left: 20,
                                     right: 20,
                                   ),
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      const Text(
-                                        'Experience',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black45,
-                                          fontSize: 12.0,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${widget.doctor.experience} Years',
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    widget.doctor.description,
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    textAlign: TextAlign.left,
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 20,
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
                                 ),
-                                SizedBox(
-                                  width: size.width,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 20,
-                                      left: 20,
-                                      right: 20,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 20,
                                     ),
-                                    child: Ink(
-                                      decoration: BoxDecoration(
-                                        color: myConstants.primaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(4.0),
+                                    const Text(
+                                      'Experience',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black45,
+                                        fontSize: 12.0,
                                       ),
-                                      child: Container(
-                                        width: size.width * 0.9,
-                                        height: 50,
-                                        alignment: Alignment.center,
-                                        child: const Text(
-                                          'Book an appointment',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0,
-                                          ),
-                                        ),
+                                    ),
+                                    Text(
+                                      '${widget.doctor.experience} Years',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: size.width,
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  //verifica daca merge asa adica sa ia tpate app doctorului respectiv si abia dupa sa treaca la pagina urmatoare
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookAppointmentScreen(
+                                              doctor: widget.doctor),
+                                    ),
+                                  );
+                                },
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    color: myConstants.primaryColor,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                  child: Container(
+                                    width: size.width * 0.9,
+                                    height: 50,
+                                    alignment: Alignment.center,
+                                    child: const Text(
+                                      'Book an appointment',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20.0,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                       Column(
                         children: [
@@ -346,11 +362,9 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                           },
                                         );
 
-                                        // show the dialog
                                         showDialog(
                                           context: context,
                                           barrierDismissible: true,
-                                          // set to false if you want to force a rating
                                           builder: (context) => dialog,
                                         );
                                       } else {

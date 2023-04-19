@@ -32,108 +32,109 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     return SizedBox(
-        height: size.height,
-        width: size.width,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          body: Stack(
-            children: [
-              Image.asset(
-                'assets/images/main_top1.png',
-                width: size.width,
+      height: size.height,
+      width: size.width,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            Image.asset(
+              'assets/images/main_top1.png',
+              width: size.width,
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Image.asset(
+                'assets/images/main_bottom1.png',
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Image.asset(
-                  'assets/images/main_bottom1.png',
+            ),
+            Column(
+              children: [
+                const SizedBox(
+                  height: 30.0,
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: size.width * 0.4,
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                left: size.width * 0.1,
+                top: 300,
+              ),
+              child: const Text(
+                'Enter yout email and we will\nsent you a password reset link.',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
                 ),
               ),
-              Column(
+            ),
+            Container(
+              padding: EdgeInsets.only(
+                top: 372,
+                right: size.width * 0.1,
+                left: size.width * 0.1,
+              ),
+              child: Column(
                 children: [
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Image.asset(
-                      'assets/images/logo.png',
-                      width: size.width * 0.4,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  left: size.width * 0.1,
-                  top: 300,
-                ),
-                child: const Text(
-                  'Enter yout email and we will\nsent you a password reset link.',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                  top: 372,
-                  right: size.width * 0.1,
-                  left: size.width * 0.1,
-                ),
-                child: Column(
-                  children: [
-                    TextField(
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        hintText: 'Email',
-                        prefixIcon: Icon(
-                          Icons.email,
-                          color: myConstants.primaryColor,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Email',
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: myConstants.primaryColor,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          passwordReset();
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50.0,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        passwordReset();
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                      ),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          gradient: myConstants.linearGradientBlue,
                         ),
-                        child: Ink(
-                          decoration: BoxDecoration(
-                            gradient: myConstants.linearGradientBlue,
-                          ),
-                          child: Container(
-                            width: size.width * 0.9,
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'RESET PASSWORD',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20.0,
-                              ),
+                        child: Container(
+                          width: size.width * 0.9,
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'RESET PASSWORD',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20.0,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

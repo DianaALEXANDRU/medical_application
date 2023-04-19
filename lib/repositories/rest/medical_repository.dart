@@ -1,21 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:medical_application/entities/appointment_entity.dart';
 import 'package:medical_application/entities/category_entity.dart';
 import 'package:medical_application/entities/doctor_entity.dart';
 import 'package:medical_application/entities/review_entity.dart';
 import 'package:medical_application/entities/user_entity.dart';
 import 'package:medical_application/models/appointment.dart';
+import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/models/user.dart' as my_user;
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/medical_repository.dart';
-import 'package:medical_application/utill/DBHelper.dart';
 import 'package:medical_application/utill/utillity.dart';
 
 class MedicalRestRepository extends MedicalRepository {
@@ -138,9 +138,6 @@ class MedicalRestRepository extends MedicalRepository {
           'category': collection2Doc.get('category')
         };
 
-        print(
-            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Lista program: ${DBHelper.fetchProgram(uid).toString()}");
-
         DoctorEntity currentDoctor = DoctorEntity.fromJson(combinedMap);
 
         combinedList.add(Doctor.fromEntity(currentDoctor));
@@ -217,8 +214,8 @@ class MedicalRestRepository extends MedicalRepository {
   @override
   Future<void> deleteAppointment(String appointmentId) async {
     await FirebaseFirestore.instance
-        .collection("appointments")
-        .doc("appointmentIs")
+        .collection('appointments')
+        .doc(appointmentId)
         .delete();
   }
 
@@ -288,7 +285,7 @@ class MedicalRestRepository extends MedicalRepository {
 
       reviewsList.add(Review.fromEntity(reviewEntity));
     }
-    print("33333333333333333333333333 ${reviewsList.length}");
+
     return reviewsList;
   }
 
@@ -297,7 +294,99 @@ class MedicalRestRepository extends MedicalRepository {
     final data = {"confirmed": true};
     await FirebaseFirestore.instance
         .collection("appointments")
-        .doc("appointmentId")
+        .doc(appointmentId)
         .set(data, SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> editUserDetails(
+      String userId, String firstName, String lastName, String phoneNo) async {
+    Map<String, String> data = {};
+    if (firstName != '') {
+      data['first_name'] = firstName;
+    }
+    if (lastName != '') {
+      data['last_name'] = lastName;
+    }
+    if (phoneNo != '') {
+      data['phone_no'] = phoneNo;
+    }
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
+  }
+
+  @override
+  Future<Map<int, List<AppointmentHours>>> fetchProgram(String doctorId) async {
+    final program = await FirebaseFirestore.instance
+        .collection('doctor')
+        .doc(doctorId)
+        .collection('program')
+        .get();
+
+    Map<int, List<AppointmentHours>> mapProgram = {};
+
+    if (program.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+          in program.docs) {
+        Map<String, dynamic> p = documentSnapshot.data();
+        if (p['start_hour'] == null) {
+          return {};
+        }
+        AppointmentHours makeHours = AppointmentHours(
+            id: documentSnapshot.id,
+            startHour: p['start_hour'],
+            endHour: p['end_hour']);
+        if (mapProgram.containsKey(p['day_of_week'])) {
+          mapProgram[p['day_of_week']]?.addAll([makeHours]);
+        } else {
+          mapProgram[p['day_of_week']] = [makeHours];
+        }
+      }
+    }
+
+    return mapProgram;
+  }
+
+  @override
+  Future<void> makeAppointment(
+      String patientId, String doctorId, DateTime date, String hour) async {
+    final Map<String, dynamic> app = {
+      "doctor_id": doctorId,
+      "patient_id": patientId,
+      "date": DateFormat("dd/MM/yyyy").format(date),
+      "time": hour,
+      "confirmed": false,
+    };
+
+    await FirebaseFirestore.instance.collection("appointments").add(app);
+  }
+
+  @override
+  Future<List<int>> fetchProgramDays(String doctorId) async {
+    final program = await FirebaseFirestore.instance
+        .collection('doctor')
+        .doc(doctorId)
+        .collection('program')
+        .get();
+
+    Set<int> setProgram = {};
+
+    if (program.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+          in program.docs) {
+        Map<String, dynamic> p = documentSnapshot.data();
+        setProgram.add(p['day_of_week']);
+      }
+    }
+
+    List<int> listProgram = [];
+    for (var element in setProgram) {
+      listProgram.add(element);
+    }
+
+    return listProgram;
   }
 }

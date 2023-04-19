@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/profile_box.dart';
+import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/screens/profile_screen.dart';
+import 'package:medical_application/models/doctor.dart';
+
+import 'home_screen.dart';
 
 class ConfirmAppointmentScreen extends StatefulWidget {
-  const ConfirmAppointmentScreen({Key? key}) : super(key: key);
+  final String patientId;
+  final Doctor doctor;
+  final DateTime date;
+  final String hour;
+
+  const ConfirmAppointmentScreen({
+    Key? key,
+    required this.patientId,
+    required this.doctor,
+    required this.date,
+    required this.hour,
+  }) : super(key: key);
 
   @override
   State<ConfirmAppointmentScreen> createState() =>
@@ -35,21 +51,6 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
               color: Colors.white,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileScreen()),
-                );
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-            ),
-          ],
           title: const Text(
             'Appointment Details',
             style: TextStyle(
@@ -96,7 +97,7 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
                         ProfileDetailsWidget(
                           size: size,
                           field: 'Category',
-                          details: 'Cardiology',
+                          details: widget.doctor.category,
                         ),
                         const SizedBox(
                           height: 20,
@@ -104,7 +105,8 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
                         ProfileDetailsWidget(
                           size: size,
                           field: 'Doctor',
-                          details: 'John Doe',
+                          details:
+                              '${widget.doctor.firstName} ${widget.doctor.lastName}',
                         ),
                         const SizedBox(
                           height: 20,
@@ -112,7 +114,7 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
                         ProfileDetailsWidget(
                           size: size,
                           field: 'Date',
-                          details: '26 Februarie 2023',
+                          details: DateFormat("dd/MM/yyyy").format(widget.date),
                         ),
                         const SizedBox(
                           height: 20,
@@ -120,7 +122,7 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
                         ProfileDetailsWidget(
                           size: size,
                           field: 'Time',
-                          details: '10:45',
+                          details: widget.hour,
                         ),
                       ],
                     ),
@@ -139,21 +141,64 @@ class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
                   left: 20,
                   right: 20,
                 ),
-                child: Ink(
-                  decoration: BoxDecoration(
-                    color: myConstants.primaryColor,
-                    borderRadius: BorderRadius.circular(4.0),
-                  ),
-                  child: Container(
-                    width: size.width * 0.9,
-                    height: 50,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'Confirm',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+                child: InkWell(
+                  onTap: () {
+                    getIt<MedicalBloc>().add(
+                      AddAppointment(
+                          patientId: widget.patientId,
+                          doctorId: widget.doctor.id,
+                          date: widget.date,
+                          hour: widget.hour),
+                    );
+                    getIt<MedicalBloc>().add(
+                      FetchAppointmentsForUser(
+                        userId: widget.patientId,
+                      ),
+                    );
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text('Appointment status'),
+                          content: const Text(
+                              'Your appointment is booked. See you soon!'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                          elevation: 4.0,
+                        );
+                      },
+                    );
+                  },
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      color: myConstants.primaryColor,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Container(
+                      width: size.width * 0.9,
+                      height: 50,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        'Confirm',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
                       ),
                     ),
                   ),

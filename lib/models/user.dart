@@ -38,5 +38,11 @@ class UserClass extends Equatable {
   String toString() => '$firstName($id)';
 
   @override
-  List<Object> get props => [id, firstName, lastName, phoneNo, role];
+  List<Object> get props => [
+        id,
+        firstName,
+        lastName,
+        phoneNo,
+        role,
+      ];
 }

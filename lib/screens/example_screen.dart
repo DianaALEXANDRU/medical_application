@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:medical_application/components/doctor/appointment_box_doctor.dart';
-
 import '../models/constants.dart';
 
 class ExampleScreen extends StatefulWidget {
@@ -13,7 +11,6 @@ class ExampleScreen extends StatefulWidget {
 class _ExampleScreenState extends State<ExampleScreen> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +44,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
       ),
       body: Center(
         child: Column(
-          children: [
+          children: const [
             // AppointmentBoxDoctor(size: size),
           ],
         ),

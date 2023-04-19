@@ -1,15 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/screens/doctor_app/nav_bar_doctor.dart';
+import 'package:medical_application/screens/doctor_app/profile_screen.dart';
 
 import '../../bloc/medical_bloc.dart';
-import '../../components/category_box.dart';
-import '../../components/doctor_box.dart';
+
 import '../../models/constants.dart';
-import '../profile_screen.dart';
 
 class DoctorHome extends StatefulWidget {
   const DoctorHome({Key? key}) : super(key: key);
@@ -44,11 +42,13 @@ class _DoctorHomeState extends State<DoctorHome> {
                   actions: [
                     IconButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const ProfileScreen()),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const ProfileForDoctorScreen(),
+                          ),
+                        );
                       },
                       icon: const Icon(
                         Icons.person,
@@ -67,24 +67,11 @@ class _DoctorHomeState extends State<DoctorHome> {
                       ),
                       child: Column(
                         children: [
-                          if (authState.user != null)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${authState.user!.firstName},',
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                ),
-                              ],
-                            ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: const [
                               Text(
-                                'Welcome back!',
+                                'Hello,',
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w500,
@@ -92,6 +79,19 @@ class _DoctorHomeState extends State<DoctorHome> {
                               ),
                             ],
                           ),
+                          if (authState.user != null)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Dr. ${authState.user!.firstName} ${authState.user!.lastName}!',
+                                  style: const TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ),
                           const SizedBox(
                             height: 30,
                           ),

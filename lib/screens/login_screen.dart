@@ -39,171 +39,173 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
-    return SizedBox(
-      height: size.height,
-      width: size.width,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Stack(
-          children: [
-            Image.asset(
-              'assets/images/main_top1.png',
-              width: size.width,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Image.asset(
-                'assets/images/main_bottom1.png',
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: size.height,
+          child: Stack(
+            children: [
+              Image.asset(
+                'assets/images/main_top1.png',
+                width: size.width,
               ),
-            ),
-            Column(
-              children: [
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    width: size.width * 0.4,
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                left: size.width * 0.1,
-                top: size.height * 0.2,
-              ),
-              child: const Text(
-                'Welcome Back,\nLog In!',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 33,
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Image.asset(
+                  'assets/images/main_bottom1.png',
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(
-                top: size.height * 0.37,
-                right: size.width * 0.1,
-                left: size.width * 0.1,
-              ),
-              child: Column(
+              Column(
                 children: [
-                  TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Email',
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: myConstants.primaryColor,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                  const SizedBox(
+                    height: 30.0,
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      width: size.width * 0.4,
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                  left: size.width * 0.1,
+                  top: size.height * 0.2,
+                ),
+                child: const Text(
+                  'Welcome Back,\nLog In!',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 33,
                   ),
-                  TextField(
-                    controller: passController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: 'Password',
-                      prefixIcon: Icon(
-                        Icons.lock,
-                        color: myConstants.primaryColor,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: Colors.grey,
-                          width: 0.0,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                  top: size.height * 0.37,
+                  right: size.width * 0.1,
+                  left: size.width * 0.1,
+                ),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'Email',
+                        prefixIcon: Icon(
+                          Icons.email,
+                          color: myConstants.primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const ForgotPasswordScreen();
-                      }));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Text(
-                          'Forget your Password?',
-                        ),
-                      ],
+                    const SizedBox(
+                      height: 30,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  SizedBox(
-                    height: 50.0,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        logIn();
+                    TextField(
+                      controller: passController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: 'Password',
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: myConstants.primaryColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: Colors.grey,
+                            width: 0.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const ForgotPasswordScreen();
+                        }));
                       },
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Text(
+                            'Forget your Password?',
+                          ),
+                        ],
                       ),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          gradient: myConstants.linearGradientBlue,
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    SizedBox(
+                      height: 50.0,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          logIn();
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
                         ),
-                        child: Container(
-                          width: size.width * 0.9,
-                          alignment: Alignment.center,
-                          child: const Text(
-                            'LOG IN',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            gradient: myConstants.linearGradientBlue,
+                          ),
+                          child: Container(
+                            width: size.width * 0.9,
+                            alignment: Alignment.center,
+                            child: const Text(
+                              'LOG IN',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Don't have an account?",
-                      ),
-                      InkWell(
-                        onTap: widget.showRegisterPage,
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            color: myConstants.primaryColor,
-                            decoration: TextDecoration.underline,
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Don't have an account?",
+                        ),
+                        InkWell(
+                          onTap: widget.showRegisterPage,
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: myConstants.primaryColor,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

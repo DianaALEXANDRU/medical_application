@@ -14,6 +14,8 @@ class ProfileDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final detailsController = TextEditingController(text: details);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,35 +28,21 @@ class ProfileDetailsWidget extends StatelessWidget {
           ),
         ),
         Container(
-          height: 70,
+          height: 60,
           width: size.width * 0.9,
           margin: const EdgeInsets.only(top: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(5),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      details,
-                      style: const TextStyle(
-                        color: Color(0xff363636),
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          // child:
+          child: TextField(
+            enabled: false,
+            controller: detailsController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter a search term',
+            ),
           ),
         ),
       ],

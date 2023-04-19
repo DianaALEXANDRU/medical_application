@@ -17,7 +17,8 @@ class MainPage extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       bloc: getIt<AuthBloc>(),
       listenWhen: (oldState, newState) =>
-          oldState.user == null && newState.user != null,
+          (oldState.user == null && newState.user != null) ||
+          (oldState.user != newState.user),
       listener: (context, state) async {
         final role = getIt<AuthBloc>().state.user?.role;
         if (role == 'user') {
@@ -41,6 +42,12 @@ class MainPage extends StatelessWidget {
           getIt<MedicalBloc>().add(
             const FetchUsers(),
           );
+          getIt<MedicalBloc>().add(
+            FetchReviewsByDoctorId(doctorId: getIt<AuthBloc>().state.user!.id),
+          );
+          getIt<MedicalBloc>()
+              .add(FetchProgram(doctorId: getIt<AuthBloc>().state.user!.id));
+
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => const DoctorHome(),
