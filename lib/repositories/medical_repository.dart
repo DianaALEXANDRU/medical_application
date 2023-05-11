@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
+import 'package:medical_application/models/programDto.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/models/user.dart';
 
@@ -13,6 +15,8 @@ abstract class MedicalRepository {
   Future<List<UserClass>> fetchUsers();
 
   Future<List<Category>> fetchCategories();
+
+  Future<List<Appointment>> fetchAllAppointments();
 
   Future<List<Appointment>> fetchAppointmentsForUser(String userId);
 
@@ -42,4 +46,38 @@ abstract class MedicalRepository {
 
   Future<void> makeAppointment(
       String patientId, String doctorId, DateTime date, String hour);
+
+  ///add doctor
+  Future<void> updateRole(String userId);
+
+  Future<void> addDoctor(
+      String category, String experience, String description);
+
+  Future<void> addProgram(List<Program> program, String doctorId);
+
+  Future<void> makeDoctor(
+    String userId,
+    String category,
+    String experience,
+    String description,
+    List<Program> program,
+    String selctFile,
+    Uint8List? selectedImageInBytes,
+  );
+
+  /// add category
+  Future<void> addCategory(
+    String name,
+    String selctFile,
+    Uint8List? selectedImageInBytes,
+  );
+
+  Future<void> editCategory(
+    String name,
+    String selctFile,
+    Uint8List? selectedImageInBytes,
+    Category category,
+  );
+
+  Future<void> deleteCategory(Category category);
 }

@@ -7,8 +7,17 @@ import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/repositories/firestore/auth_repository.dart';
 import 'package:medical_application/repositories/rest/medical_repository.dart';
 import 'package:medical_application/screens/main_page.dart';
+import 'package:medical_application/screens/web/add_doctor_screen.dart';
+import 'package:medical_application/screens/web/appointments_screen.dart';
+import 'package:medical_application/screens/web/category_screen.dart';
+import 'package:medical_application/screens/web/dashboard_screen.dart';
+import 'package:medical_application/screens/web/doctors_screen.dart';
+import 'package:medical_application/screens/web/users_screen.dart';
+import 'package:provider/provider.dart';
 
+import 'controllers/controller.dart';
 import 'firebase_options.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 final GetIt getIt = GetIt.instance;
 
@@ -42,6 +51,8 @@ class _MyAppState extends State<MyApp> {
 
     _medicalBloc.add(const FetchDoctors());
     _medicalBloc.add(const FetchCategories());
+    _medicalBloc.add(const FetchAllAppointments());
+    _medicalBloc.add(const FetchUsers());
 
     var authRepository = AuthRepositoryFirestore();
     _authBloc = AuthBloc(authRepository: authRepository);
@@ -58,10 +69,19 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Medical App Diana',
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
+      home: kIsWeb
+          ? MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) => Controller(),
+                )
+              ],
+              child: const AddDoctorScreen(),
+            )
+          : const MainPage(),
     );
   }
 }

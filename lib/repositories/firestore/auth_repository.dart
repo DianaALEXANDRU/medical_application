@@ -33,6 +33,7 @@ class AuthRepositoryFirestore extends AuthRepository {
               "last_name": lastName,
               "phone_no": phoneNo,
               "role": 'user',
+              "email": email,
             },
           );
         },
@@ -127,6 +128,7 @@ class AuthRepositoryFirestore extends AuthRepository {
       'last_name': userDetails.get('last_name'),
       'phone_no': userDetails.get('phone_no'),
       'role': userDetails.get('role'),
+      'email': userDetails.get('email'),
       'description': doctorDetails.get('description'),
       'experience': doctorDetails.get('experience'),
       'image_url': doctorDetails.get('image_url'),

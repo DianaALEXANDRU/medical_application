@@ -5,6 +5,9 @@ import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/screens/auth_page.dart';
+import 'package:medical_application/screens/web/dashboard_screen.dart';
+import 'package:medical_application/screens/web/forgot_password_screen.dart';
+import 'package:medical_application/screens/web/login_web_screen.dart';
 
 import 'doctor_app/home.dart';
 import 'home_screen.dart';
@@ -62,7 +65,10 @@ class MainPage extends StatelessWidget {
             if (snapshot.hasData) {
               getIt<AuthBloc>().add(const FetchUser());
             }
+
             return const AuthPage();
+
+            ///schimba aici
           },
         ),
       ),

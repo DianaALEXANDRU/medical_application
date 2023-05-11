@@ -3,6 +3,10 @@ import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 
+import 'home_screen.dart';
+import 'login_screen.dart';
+import 'main_page.dart';
+
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
@@ -31,11 +35,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
+    var showMessage = false;
     return SizedBox(
       height: size.height,
       width: size.width,
       child: Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+          ),
+        ),
         body: Stack(
           children: [
             Image.asset(
@@ -105,7 +126,37 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     height: 50.0,
                     child: ElevatedButton(
                       onPressed: () {
-                        passwordReset();
+                        passwordReset().then((value) {
+                          showMessage = true;
+                        });
+                        if (showMessage = true) {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Email sent! '),
+                                content: const Text(
+                                    'Check your email to reset the password'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => MainPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                                elevation: 4.0,
+                              );
+                            },
+                          );
+                        }
+                        showMessage = false;
                       },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,

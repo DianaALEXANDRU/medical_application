@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +7,7 @@ import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
+import 'package:medical_application/models/programDto.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/medical_repository.dart';
@@ -36,6 +39,7 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     on<FetchDoctors>(_handleFetchDoctors);
     on<FetchCategories>(_handleFetchCategories);
     on<FetchUsers>(_handleFetchUsers);
+    on<FetchAllAppointments>(_handleFetchAllAppointments);
     on<FetchAppointmentsForUser>(_handleFetchAppointmentsForUser);
     on<FetchAppointmentsForDoctor>(_handleFetchAppointmentsForDoctor);
     on<FetchReviews>(_handleFetchReviews);
@@ -47,6 +51,13 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     on<AddAppointment>(_handleAddAppointment);
     on<FetchProgramDays>(_handleFetchProgramDays);
     on<FetchProgram>(_handleFetchProgram);
+
+    on<MakeDoctor>(_handleMakeDoctor);
+
+    on<AddCategory>(_handleAddCategory);
+    on<EditCategory>(_handleEditCategory);
+    on<DeleteCategory>(_handleDeleteCategory);
+    // on<DeleteCategory>(_handleDeleteCategory);
   }
 
   Future<void> _handleFetchDoctors(
@@ -81,6 +92,19 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     emit(
       state.copyWith(
         categories: categories,
+      ),
+    );
+  }
+
+  Future<void> _handleFetchAllAppointments(
+    FetchAllAppointments event,
+    Emitter<MedicalState> emit,
+  ) async {
+    List<Appointment> appointments =
+        await medicalRepository.fetchAllAppointments();
+    emit(
+      state.copyWith(
+        appointments: appointments,
       ),
     );
   }
@@ -227,14 +251,18 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     ConfirmeAppointment event,
     Emitter<MedicalState> emit,
   ) async {
-    await medicalRepository.confirmeAppointment(event.appointmentId);
+    await medicalRepository.confirmeAppointment(
+      event.appointmentId,
+    );
   }
 
   Future<void> _handleDeleteAppointment(
     DeleteAppointment event,
     Emitter<MedicalState> emit,
   ) async {
-    await medicalRepository.deleteAppointment(event.appointmentId);
+    await medicalRepository.deleteAppointment(
+      event.appointmentId,
+    );
   }
 
   Future<void> _handleEditUserDetails(
@@ -254,6 +282,71 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     Emitter<MedicalState> emit,
   ) async {
     await medicalRepository.makeAppointment(
-        event.patientId, event.doctorId, event.date, event.hour);
+      event.patientId,
+      event.doctorId,
+      event.date,
+      event.hour,
+    );
+  }
+
+  Future<void> _handleMakeDoctor(
+    MakeDoctor event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.makeDoctor(
+      event.userId,
+      event.category,
+      event.experience,
+      event.description,
+      event.program,
+      event.selctFile,
+      event.selectedImageInBytes,
+    );
+
+    List<Doctor> doctors = await medicalRepository.fetchDoctors();
+    emit(
+      state.copyWith(
+        doctors: doctors,
+      ),
+    );
+  }
+
+  Future<void> _handleAddCategory(
+    AddCategory event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.addCategory(
+      event.name,
+      event.selctFile,
+      event.selectedImageInBytes,
+    );
+  }
+
+  Future<void> _handleEditCategory(
+    EditCategory event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.editCategory(
+      event.name,
+      event.selctFile,
+      event.selectedImageInBytes,
+      event.category,
+    );
+
+    List<Category> categories = await medicalRepository.fetchCategories();
+    emit(
+      state.copyWith(
+        categories: categories,
+      ),
+    );
+  }
+
+  Future<void> _handleDeleteCategory(
+    DeleteCategory event,
+    Emitter<MedicalState> emit,
+  ) async {
+    await medicalRepository.deleteCategory(
+      event.category,
+    );
   }
 }

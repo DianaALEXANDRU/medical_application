@@ -34,6 +34,16 @@ class FetchCategories extends MedicalEvent {
   List<Object?> get props => [];
 }
 
+class FetchAllAppointments extends MedicalEvent {
+  const FetchAllAppointments();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchAppointmentsForUser extends MedicalEvent {
   final String userId;
 
@@ -189,4 +199,97 @@ class EditUserDetails extends MedicalEvent {
         lastName,
         phoneNo,
       ];
+}
+
+class MakeDoctor extends MedicalEvent {
+  final String userId;
+  final String category;
+  final String experience;
+  final String description;
+  final List<Program> program;
+  final String selctFile;
+  final Uint8List? selectedImageInBytes;
+
+  const MakeDoctor({
+    required this.userId,
+    required this.category,
+    required this.experience,
+    required this.description,
+    required this.program,
+    required this.selctFile,
+    required this.selectedImageInBytes,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        userId,
+        category,
+        experience,
+        description,
+        program,
+        selctFile,
+        selectedImageInBytes,
+      ];
+}
+
+class AddCategory extends MedicalEvent {
+  final String name;
+  final String selctFile;
+  final Uint8List? selectedImageInBytes;
+
+  const AddCategory({
+    required this.name,
+    required this.selctFile,
+    required this.selectedImageInBytes,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        name,
+        selctFile,
+        selectedImageInBytes,
+      ];
+}
+
+class EditCategory extends MedicalEvent {
+  final String name;
+  final String selctFile;
+  final Uint8List? selectedImageInBytes;
+  final Category category;
+
+  const EditCategory({
+    required this.name,
+    required this.selctFile,
+    required this.selectedImageInBytes,
+    required this.category,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        name,
+        selctFile,
+        selectedImageInBytes,
+        category,
+      ];
+}
+
+class DeleteCategory extends MedicalEvent {
+  final Category category;
+
+  const DeleteCategory({required this.category});
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [category];
 }

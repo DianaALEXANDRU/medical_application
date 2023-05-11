@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/entities/appointment_entity.dart';
 import 'package:medical_application/entities/category_entity.dart';
@@ -12,10 +14,12 @@ import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
+import 'package:medical_application/models/programDto.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/models/user.dart' as my_user;
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/repositories/medical_repository.dart';
+import 'package:medical_application/utill/helpers.dart';
 import 'package:medical_application/utill/utillity.dart';
 
 class MedicalRestRepository extends MedicalRepository {
@@ -61,6 +65,7 @@ class MedicalRestRepository extends MedicalRepository {
         'last_name': app.get('last_name'),
         'phone_no': app.get('phone_no'),
         'role': app.get('role'),
+        'email': app.get('email'),
       };
 
       UserEntity user = UserEntity.fromJson(userMap);
@@ -132,6 +137,7 @@ class MedicalRestRepository extends MedicalRepository {
           'last_name': collection1Doc.get('last_name'),
           'phone_no': collection1Doc.get('phone_no'),
           'role': collection1Doc.get('role'),
+          'email': collection1Doc.get('email'),
           'description': collection2Doc.get('description'),
           'experience': collection2Doc.get('experience'),
           'image_url': collection2Doc.get('image_url'),
@@ -147,6 +153,38 @@ class MedicalRestRepository extends MedicalRepository {
     }
 
     return combinedList;
+  }
+
+  @override
+  Future<List<Appointment>> fetchAllAppointments() async {
+    List<Appointment> appointmentsList = [];
+
+    QuerySnapshot appointmentsSnapshot =
+        await FirebaseFirestore.instance.collection('appointments').get();
+
+    for (DocumentSnapshot app in appointmentsSnapshot.docs) {
+      String uid = app.id;
+
+      print("  ############################ App Snap: ${app.data()}");
+
+      Map<String, dynamic> appointmentMap = {
+        'id': uid,
+        'patient_id': app.get('patient_id'),
+        'doctor_id': app.get('doctor_id'),
+        'date': app.get('date'),
+        'time': app.get('time'),
+        'confirmed': app.get('confirmed'),
+      };
+
+      AppointmentEntity appointment =
+          AppointmentEntity.fromJson(appointmentMap);
+
+      appointmentsList.add(Appointment.fromEntity(appointment));
+    }
+
+    Utility.sortListByDateTime(appointmentsList);
+
+    return appointmentsList;
   }
 
   @override
@@ -388,5 +426,192 @@ class MedicalRestRepository extends MedicalRepository {
     }
 
     return listProgram;
+  }
+
+  //make doctor
+  @override
+  Future<void> updateRole(String userId) async {
+    final data = {"role": "doctor"};
+    await FirebaseFirestore.instance
+        .collection("doctor")
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
+  }
+
+  @override
+  Future<void> addDoctor(
+      String category, String experience, String description) async {
+    final Map<String, dynamic> newDoctor = {
+      "category": category,
+      "description": description,
+      "experience": experience,
+      "image_url":
+          "https://firebasestorage.googleapis.com/v0/b/fluttermedicalapp-ab48a.appspot.com/o/doctors%2FCopie%20a%20Pink%20Modern%20We%20Are%20Hiring.png?alt=media&token=a1ada3a5-3d01-4327-bd84-f44ad6ae897f"
+    };
+
+    await FirebaseFirestore.instance.collection("doctor").add(newDoctor);
+  }
+
+  @override
+  Future<void> addProgram(List<Program> program, String doctorId) async {
+    for (var p in program) {
+      final Map<String, dynamic> newProgram = {
+        "day_of_week": getDayNumber(p.day),
+        "start_time": p.startHour,
+        "end_time": p.endHour,
+      };
+
+      final program = await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(doctorId)
+          .collection('program')
+          .add(newProgram);
+    }
+  }
+
+  @override
+  Future<void> makeDoctor(
+      String userId,
+      String category,
+      String experience,
+      String description,
+      List<Program> program,
+      String selctFile,
+      Uint8List? selectedImageInBytes) async {
+    //add image to storage
+    UploadTask uploadTask;
+    Reference ref =
+        FirebaseStorage.instance.ref().child('doctors').child('/$selctFile');
+    final metadata = SettableMetadata(contentType: 'image/png');
+    uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+    await uploadTask.whenComplete(() => null);
+    String imageUrl = await ref.getDownloadURL();
+    print("Upload image URL $imageUrl");
+
+    //change role in doctor
+
+    final data = {"role": "doctor"};
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userId)
+        .set(data, SetOptions(merge: true));
+
+    //add doctor
+
+    final Map<String, dynamic> newDoctor = {
+      "category": category,
+      "description": description,
+      "experience": experience,
+      "image_url": imageUrl
+    };
+
+    await FirebaseFirestore.instance
+        .collection("doctor")
+        .doc(userId)
+        .set(newDoctor)
+        .then((value) {
+      print("Document added successfully!");
+    }).catchError((error) {
+      print("Failed to add document: $error");
+    });
+
+    //add program
+
+    for (var p in program) {
+      final Map<String, dynamic> newProgram = {
+        "day_of_week": getDayNumber(p.day),
+        "start_time": p.startHour,
+        "end_time": p.endHour,
+      };
+
+      final program = await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(userId)
+          .collection('program')
+          .add(newProgram);
+    }
+  }
+
+  @override
+  Future<void> addCategory(
+      String name, String selctFile, Uint8List? selectedImageInBytes) async {
+    try {
+      UploadTask uploadTask;
+      Reference ref = FirebaseStorage.instance
+          .ref()
+          .child('CATEGORY')
+          .child('/' + selctFile);
+      final metadata = SettableMetadata(contentType: 'image/png');
+      uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+      await uploadTask.whenComplete(() => null);
+      String imageUrl = await ref.getDownloadURL();
+      print("Upload image URL " + imageUrl);
+
+      final Map<String, dynamic> newCategory = {"name": name, "url": imageUrl};
+
+      await FirebaseFirestore.instance.collection("category").add(newCategory);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  Future<void> editCategory(String name, String selctFile,
+      Uint8List? selectedImageInBytes, Category category) async {
+    if (selectedImageInBytes != null || name != category.name) {
+      String imageUrl = '';
+      //gasesc in firebase category pe care vreau sa o modific pt a extrage uid ul
+      QuerySnapshot categorySnapshot = await FirebaseFirestore.instance
+          .collection('category')
+          .where('name', isEqualTo: category.name)
+          .where('url', isEqualTo: category.url)
+          .get();
+      if (categorySnapshot.size == 1) {
+        for (DocumentSnapshot cat in categorySnapshot.docs) {
+          if (selectedImageInBytes != null) {
+            UploadTask uploadTask;
+            Reference ref = FirebaseStorage.instance
+                .ref()
+                .child('CATEGORY')
+                .child('/$selctFile');
+            final metadata = SettableMetadata(contentType: 'image/png');
+            uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+            await uploadTask.whenComplete(() => null);
+            imageUrl = await ref.getDownloadURL();
+            print("Upload image URL $imageUrl");
+
+            Map<String, dynamic> categoryMap = {'url': imageUrl};
+            await FirebaseFirestore.instance
+                .collection("category")
+                .doc(cat.id)
+                .set(categoryMap, SetOptions(merge: true));
+          }
+
+          if (name != category.name) {
+            Map<String, dynamic> categoryMap = {'name': name};
+            await FirebaseFirestore.instance
+                .collection("category")
+                .doc(cat.id)
+                .set(categoryMap, SetOptions(merge: true));
+          }
+        }
+      }
+    }
+  }
+
+  @override
+  Future<void> deleteCategory(Category category) async {
+    CollectionReference collectionRef =
+        FirebaseFirestore.instance.collection('category');
+
+    QuerySnapshot querySnapshot =
+        await collectionRef.where('name', isEqualTo: category.name).get();
+
+    for (var doc in querySnapshot.docs) {
+      doc.reference.delete();
+    }
   }
 }

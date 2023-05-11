@@ -9,6 +9,7 @@ class Doctor extends Equatable {
   final String lastName;
   final String phoneNo;
   final String role;
+  final String email;
   final String description;
   final String experience;
   final String imageUrl;
@@ -20,6 +21,7 @@ class Doctor extends Equatable {
     required this.lastName,
     required this.phoneNo,
     required this.role,
+    required this.email,
     required this.description,
     required this.experience,
     required this.imageUrl,
@@ -32,6 +34,7 @@ class Doctor extends Equatable {
         lastName: entity.lastName,
         phoneNo: entity.phoneNo,
         role: entity.role,
+        email: entity.email,
         description: entity.description,
         experience: entity.experience,
         imageUrl: entity.imageUrl,
@@ -44,6 +47,7 @@ class Doctor extends Equatable {
         lastName: lastName,
         phoneNo: phoneNo,
         role: role,
+        email: email,
         description: description,
         experience: experience,
         imageUrl: imageUrl,
@@ -60,6 +64,7 @@ class Doctor extends Equatable {
         lastName,
         phoneNo,
         role,
+        email,
         description,
         experience,
         imageUrl,

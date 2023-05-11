@@ -156,7 +156,7 @@ class AppointmentBoxDoctor extends StatelessWidget {
                               backgroundColor: Colors.green,
                             ),
                             child: const Text(
-                              'Confirme',
+                              'Confirm',
                             ),
                           ),
                         ),

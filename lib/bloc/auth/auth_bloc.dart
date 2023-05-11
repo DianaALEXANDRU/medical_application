@@ -31,6 +31,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     UserClass user = await authRepository.fetchUser();
+    emit(
+      state.copyWith(
+        user: user,
+      ),
+    );
+
     if (user.role == 'doctor') {
       Doctor doctor = await authRepository.fetchDoctor();
       emit(
@@ -39,11 +45,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
-    emit(
-      state.copyWith(
-        user: user,
-      ),
-    );
   }
 
   Future<void> _handleFetchDoctor(

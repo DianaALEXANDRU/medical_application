@@ -8,6 +8,7 @@ class DoctorEntity extends Equatable {
   static const String fieldLastName = 'last_name';
   static const String fieldPhoneNo = 'phone_no';
   static const String fieldRole = 'role';
+  static const String fieldEmail = 'email';
   static const String fieldDescription = 'description';
   static const String fieldExperience = 'experience';
   static const String fieldImageUrl = 'image_url';
@@ -18,6 +19,7 @@ class DoctorEntity extends Equatable {
   final String lastName;
   final String phoneNo;
   final String role;
+  final String email;
   final String description;
   final String experience;
   final String imageUrl;
@@ -29,6 +31,7 @@ class DoctorEntity extends Equatable {
     required this.lastName,
     required this.phoneNo,
     required this.role,
+    required this.email,
     required this.description,
     required this.experience,
     required this.imageUrl,
@@ -41,6 +44,7 @@ class DoctorEntity extends Equatable {
         lastName: json[fieldLastName],
         phoneNo: json[fieldPhoneNo],
         role: json[fieldRole],
+        email: json[fieldEmail],
         description: json[fieldDescription] ?? '',
         experience: json[fieldExperience],
         imageUrl: json[fieldImageUrl] ?? '',
@@ -53,6 +57,7 @@ class DoctorEntity extends Equatable {
         fieldLastName: lastName,
         fieldPhoneNo: phoneNo,
         fieldRole: role,
+        fieldEmail: email,
         fieldDescription: description,
         fieldExperience: experience,
         fieldImageUrl: imageUrl,
@@ -66,6 +71,7 @@ class DoctorEntity extends Equatable {
         lastName,
         phoneNo,
         role,
+        email,
         description,
         experience,
         imageUrl,

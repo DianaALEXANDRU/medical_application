@@ -3,6 +3,7 @@ import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/appointment_hours.dart';
+import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/models/review.dart';
@@ -153,4 +154,24 @@ bool isDayInProgram(List<int> programDays, DateTime day) {
   }
 
   return false;
+}
+
+int existingDoctorsByCategory(List<Doctor> doctors, String category) {
+  int doctorsNr = 0;
+  for (var doctor in doctors) {
+    if (doctor.category == category) {
+      doctorsNr++;
+    }
+  }
+  return doctorsNr;
+}
+
+List<String> makeCategoryFilters(List<Category> categories) {
+  List<String> filters = [];
+  filters.add('All categories');
+  for (var cat in categories) {
+    filters.add(cat.name);
+  }
+
+  return filters;
 }
