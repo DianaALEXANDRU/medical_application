@@ -261,12 +261,16 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                               ),
                             ],
                           ),
-                          Spacer(),
+                          const Spacer(),
                           SizedBox(
                             width: size.width,
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  top: 20, left: 20, right: 20, bottom: 16),
+                                top: 20,
+                                left: 20,
+                                right: 20,
+                                bottom: 16,
+                              ),
                               child: InkWell(
                                 onTap: () {
                                   //verifica daca merge asa adica sa ia tpate app doctorului respectiv si abia dupa sa treaca la pagina urmatoare
