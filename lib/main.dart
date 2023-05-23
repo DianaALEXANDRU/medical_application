@@ -74,21 +74,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Medical App Diana',
-      debugShowCheckedModeBanner: false,
-      home: kIsWeb ? DoctorsScreen() : MainPage(),
-    );
-
-    // return  MaterialApp.router(
+    // return const MaterialApp(
     //   title: 'Medical App Diana',
     //   debugShowCheckedModeBanner: false,
-    //   routerConfig: _router,
-    //   // home: kIsWeb
-    //   //     ?  DoctorsScreen()
-    //   //
-    //   //     : MainPage(),
+    //   home: kIsWeb ? DoctorsScreen() : MainPage(),
     // );
+
+    return  MaterialApp.router(
+      title: 'Medical App Diana',
+      debugShowCheckedModeBanner: false,
+      routerConfig: _router,
+      // home: kIsWeb
+      //     ?  DoctorsScreen()
+      //
+      //     : MainPage(),
+    );
   }
 }
 
