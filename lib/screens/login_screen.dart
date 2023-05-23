@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.topRight,
                     child: Image.asset(
-                      'assets/images/logo.png',
+                      'assets/images/log.png',
                       width: size.width * 0.4,
                     ),
                   ),

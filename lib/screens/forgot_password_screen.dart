@@ -77,7 +77,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Image.asset(
-                    'assets/images/logo.png',
+                    'assets/images/log.png',
                     width: size.width * 0.4,
                   ),
                 ),

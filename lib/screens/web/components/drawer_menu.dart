@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../models/constants.dart';
 
@@ -22,7 +23,9 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Dashboard'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).go("/");
+            },
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0 * 2),
@@ -38,7 +41,9 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Category'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).go("/category");
+            },
           ),
           ListTile(
             horizontalTitleGap: 0.8,
@@ -47,7 +52,9 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Doctors'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).go("/doctors");
+            },
           ),
           ListTile(
             horizontalTitleGap: 0.8,
@@ -65,7 +72,9 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Appointments'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).go("/appointments");
+            },
           ),
           ListTile(
             horizontalTitleGap: 0.8,

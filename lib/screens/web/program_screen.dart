@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medical_application/controllers/controller.dart';
+import 'package:medical_application/screens/web/program_content_screen.dart';
 import 'package:medical_application/screens/web/responsive_widget.dart';
-
-import '../../controllers/controller.dart';
-import 'category_content_screen.dart';
 import 'components/drawer_menu.dart';
-import 'package:provider/provider.dart';
 
-class CategoryScreen extends StatefulWidget {
-  const CategoryScreen({Key? key}) : super(key: key);
+class ProgramScreen extends StatefulWidget {
+  const ProgramScreen({Key? key}) : super(key: key);
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<ProgramScreen> createState() => _ProgramScreenState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
+class _ProgramScreenState extends State<ProgramScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +28,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
             const Expanded(
               flex: 5,
-              child: CategoryContentScreen(),
+              child: ProgramContentScreen(),
             )
           ],
         ),

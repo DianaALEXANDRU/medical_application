@@ -374,7 +374,7 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 6.0),
+                        const SizedBox(height: 8.0),
                         Container(
                           height: 50.0,
                           width: width * 0.35,

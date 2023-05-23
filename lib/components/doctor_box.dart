@@ -86,27 +86,27 @@ class DoctorWidget extends StatelessWidget {
                             fontWeight: FontWeight.w300,
                           ),
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: 3,
-                            left: size.width * 0.25,
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                '5',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   margin: EdgeInsets.only(
+                        //     top: 3,
+                        //     left: size.width * 0.25,
+                        //   ),
+                        //   child: Row(
+                        //     children: const [
+                        //       Icon(
+                        //         Icons.star,
+                        //         color: Colors.amber,
+                        //       ),
+                        //       Text(
+                        //         '5',
+                        //         style: TextStyle(
+                        //           color: Colors.black,
+                        //           fontSize: 12,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

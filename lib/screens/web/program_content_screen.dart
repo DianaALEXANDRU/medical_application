@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/screens/web/doctor_profile_screen.dart';
 import 'package:medical_application/utill/helpers.dart';
 
 import 'components/custom_app_bar.dart';
 
-class DoctorContentScreen extends StatefulWidget {
-  const DoctorContentScreen({Key? key}) : super(key: key);
+class ProgramContentScreen extends StatefulWidget {
+  const ProgramContentScreen({Key? key}) : super(key: key);
 
   @override
-  State<DoctorContentScreen> createState() => _DoctorContentScreenState();
+  State<ProgramContentScreen> createState() => _ProgramContentScreenState();
 }
 
-class _DoctorContentScreenState extends State<DoctorContentScreen> {
+class _ProgramContentScreenState extends State<ProgramContentScreen> {
   String _filter = '';
 
   List<Doctor> _runFilter(List<Doctor> allDoctors) {
@@ -161,9 +159,7 @@ class _DoctorContentScreenState extends State<DoctorContentScreen> {
                                     ],
                                   ),
                                   TextButton(
-                                    onPressed: () {
-                                      context.go('/doctors/addDoctor');
-                                    },
+                                    onPressed: () {},
                                     child: const Text(
                                       'Add new doctor',
                                       style: TextStyle(fontSize: 16.0),
@@ -195,33 +191,11 @@ class _DoctorContentScreenState extends State<DoctorContentScreen> {
                                     label: Text('View more'),
                                     tooltip:
                                         'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Edit'),
-                                    tooltip:
-                                        'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Delete'),
-                                    tooltip:
-                                        'represents phone number of the user'),
                               ],
                               source: dropdownValueCategory != null
                                   ? _DataSource(
-                                      doctors: _runCategoryFilter(foundDoctors),
-                                      onPressedNavigate: (doctorView) {
-                                        print(
-                                            '############### ON Pressed Navigate ');
-                                        context.go(
-                                            '/doctors/doctorDetails/${doctorView!.id}');
-                                      })
-                                  : _DataSource(
-                                      doctors: foundDoctors,
-                                      onPressedNavigate: (doctorView) {
-                                        print(
-                                            '############### ON Pressed Navigate ');
-                                        //context.go('/doctorDetails/$doctorView');
-                                        context.go(
-                                            '/doctors/doctorDetails/${doctorView!.id}');
-                                      }),
+                                      _runCategoryFilter(foundDoctors))
+                                  : _DataSource(foundDoctors),
                               rowsPerPage: _rowsPerPage,
                               onRowsPerPageChanged: (int? value) {
                                 setState(() {
@@ -246,11 +220,9 @@ class _DoctorContentScreenState extends State<DoctorContentScreen> {
 }
 
 class _DataSource extends DataTableSource {
-  final void Function(Doctor doctor) onPressedNavigate;
-
   final List<Doctor> doctors;
 
-  _DataSource({required this.doctors, required this.onPressedNavigate});
+  _DataSource(this.doctors);
 
   @override
   DataRow getRow(int index) {
@@ -275,22 +247,8 @@ class _DataSource extends DataTableSource {
         ),
         DataCell(
           IconButton(
-            onPressed: () {
-              onPressedNavigate.call(doctors[index]);
-            },
+            onPressed: () {},
             icon: const Icon(Icons.arrow_forward, color: Colors.grey),
-          ),
-        ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit, color: Colors.green),
-          ),
-        ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.delete, color: Colors.red),
           ),
         ),
       ],

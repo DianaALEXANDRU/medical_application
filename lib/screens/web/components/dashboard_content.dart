@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:medical_application/screens/web/components/analytic_cards.dart';
 import 'package:medical_application/screens/web/components/custom_app_bar.dart';

@@ -19,7 +19,6 @@ class _UsersScreenState extends State<UsersScreen> {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(247, 251, 254, 1),
       drawer: const DrawerMenu(),
-      key: context.read<Controller>().scaffoldKey,
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,

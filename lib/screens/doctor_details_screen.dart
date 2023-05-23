@@ -161,24 +161,24 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                   textAlign: TextAlign.left,
                                 ),
                               ),
-                              Container(
-                                margin: const EdgeInsets.only(top: 3, left: 20),
-                                child: Row(
-                                  children: const [
-                                    Icon(
-                                      Icons.star,
-                                      color: Colors.amber,
-                                    ),
-                                    Text(
-                                      " ",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
+                              // Container(
+                              //   margin: const EdgeInsets.only(top: 3, left: 20),
+                              //   child: Row(
+                              //     children: const [
+                              //       Icon(
+                              //         Icons.star,
+                              //         color: Colors.amber,
+                              //       ),
+                              //       Text(
+                              //         " ",
+                              //         style: TextStyle(
+                              //           color: Colors.black,
+                              //           fontSize: 17,
+                              //         ),
+                              //       )
+                              //     ],
+                              //   ),
+                              // )
                             ],
                           ),
                           Row(
@@ -375,7 +375,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                           builder: (context) {
                                             return const AlertDialog(
                                               content: Text(
-                                                  "If you don't have an confirmed appointment for this doctor in the past you can't review him"),
+                                                  "If you don't have a confirmed appointment for this doctor in the past you can't add a review."),
                                             );
                                           },
                                         );

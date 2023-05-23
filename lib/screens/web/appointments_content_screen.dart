@@ -193,7 +193,7 @@ class _DataSource extends DataTableSource {
           Text(DateFormat('dd/MM/yyyy HH:mm').format(data.dateAndTime)),
         ),
         DataCell(
-          email == null ? const Text('') : Text(email!),
+          email == null ? const Text('') : Text(email),
         ),
         DataCell(
           IconButton(

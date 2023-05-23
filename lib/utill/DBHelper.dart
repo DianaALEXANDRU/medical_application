@@ -6,11 +6,7 @@ abstract class DBHelper {
       await FirebaseFirestore.instance
           .collection('appointments')
           .doc(appointmentId)
-          .delete()
-          .then(
-            (doc) => print("Document deleted"),
-            onError: (e) => print("Error updating document $e"),
-          );
+          .delete();
     } catch (e) {
       return false;
     }

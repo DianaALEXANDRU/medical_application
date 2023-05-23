@@ -16,21 +16,36 @@ class NavBar extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: const Text('Oflutter.com'),
-            accountEmail: const Text('example@gmail.com'),
-            currentAccountPicture: CircleAvatar(
-              child: ClipOval(
-                child: Image.network(
-                  'https://img.freepik.com/free-photo/portrait-young-male-doctor-with-stethoscope_171337-5084.jpg?w=1380&t=st=1675766319~exp=1675766919~hmac=640e42204a92bf6354a9c42e079866552653d18b0c357a51c98dc783611f153d',
-                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 90,
-                ),
-              ),
+            accountName: const Text(
+              'Hello,',
+              style: TextStyle(fontSize: 16),
             ),
+            accountEmail: const Text(
+              'Diana Alexandru!',
+              style: TextStyle(fontSize: 15),
+            ),
+            // currentAccountPicture: Image.asset(
+            //   'assets/images/log.png',
+            //   fit: BoxFit.cover,
+            //   width: 200,
+            //   height: 200,
+            // ),
             decoration: BoxDecoration(
               gradient: myConstants.linearGradientBlue,
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.home),
+            title: const Text('Home'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DoctorScreen(category: ''),
+                ),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.view_list_rounded),
@@ -72,10 +87,10 @@ class NavBar extends StatelessWidget {
               );
             },
           ),
-          const ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-          ),
+          // const ListTile(
+          //   leading: Icon(Icons.settings),
+          //   title: Text('Settings'),
+          // ),
           const Divider(),
           GestureDetector(
             onTap: () {

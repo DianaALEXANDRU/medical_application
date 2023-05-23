@@ -175,3 +175,12 @@ List<String> makeCategoryFilters(List<Category> categories) {
 
   return filters;
 }
+
+Doctor? findDoctor(List<Doctor> doctors, String doctorId) {
+  for (var doc in doctors) {
+    if (doc.id == doctorId) {
+      return doc;
+    }
+  }
+  return null;
+}
