@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/appointment_box.dart';
 import 'package:medical_application/main.dart';
@@ -41,6 +42,8 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     List<Appointment> upcomingAppointments = [];
     List<Appointment> pastAppointments = [];
@@ -56,7 +59,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
               backgroundColor: Colors.white,
               leading: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.go("/patientHome");
                 },
                 icon: const Icon(
                   Icons.arrow_back,

@@ -40,7 +40,7 @@ class _DoctorProfileContentScreenState
                   padding: const EdgeInsets.all(24.0),
                   child: Text(
                     'Dr. ${widget.doctor.firstName} ${widget.doctor.lastName}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -68,6 +68,7 @@ class _DoctorProfileContentScreenState
                           Container(
                               height: 400, //height of TabBarView
                               decoration: const BoxDecoration(
+                                  color: Colors.redAccent,
                                   border: Border(
                                       top: BorderSide(
                                           color: Colors.grey, width: 0.5))),

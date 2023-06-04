@@ -78,7 +78,7 @@ class AppointmentBoxDoctor extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                DateFormat('hh:mm').format(app.dateAndTime),
+                                DateFormat('HH:mm').format(app.dateAndTime),
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 17,

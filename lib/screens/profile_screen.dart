@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
@@ -23,6 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
 
@@ -125,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             centerTitle: true,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                GoRouter.of(context).go("/patientHome");
               },
               icon: const Icon(
                 Icons.arrow_back,

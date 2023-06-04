@@ -99,7 +99,9 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Users'),
-            onTap: () {},
+            onTap: () {
+              GoRouter.of(context).go("/users");
+            },
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0 * 2),

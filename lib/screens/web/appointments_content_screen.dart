@@ -6,6 +6,7 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/utill/helpers.dart';
 
+import '../../models/doctor.dart';
 import 'components/custom_app_bar.dart';
 
 class AppointmentsContentScreen extends StatefulWidget {
@@ -18,12 +19,108 @@ class AppointmentsContentScreen extends StatefulWidget {
 
 class _AppointmentsContentScreenState extends State<AppointmentsContentScreen> {
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  String? dropdownValueTime = 'All';
+
+  String _filter = '';
+
+  List<Appointment> _runFilter(List<Appointment> allAppointment) {
+    List<Appointment> results = [];
+    if (_filter.isEmpty) {
+      results = allAppointment;
+    } else {
+      results = allAppointment.where((app) {
+        var doctor =
+            findDoctorById(getIt<MedicalBloc>().state.doctors, app.doctorId);
+        var firstName = doctor?.firstName ?? '';
+        var lastName = doctor?.lastName ?? '';
+        var name = firstName + lastName;
+        var lowercaseName = name.toLowerCase();
+        var lowercaseFilter = _filter.toLowerCase();
+        return lowercaseName.contains(lowercaseFilter);
+      }).toList();
+    }
+
+    return results;
+  }
+
+  List<Appointment> _runFilterUpcoming(List<Appointment> allAppointments) {
+    List<Appointment> results = [];
+
+    results = allAppointments
+        .where((appointment) => appointment.dateAndTime.isAfter(DateTime.now()))
+        .toList();
+
+    return results;
+  }
+
+  List<Appointment> _runFilterPast(List<Appointment> allAppointments) {
+    List<Appointment> results = [];
+
+    results = allAppointments
+        .where(
+            (appointment) => appointment.dateAndTime.isBefore(DateTime.now()))
+        .toList();
+
+    return results;
+  }
+
+  List<Appointment> _runTimeFilter(List<Appointment> allAppointments) {
+    List<Appointment> results = [];
+    if (dropdownValueTime == null || dropdownValueTime == 'All') {
+      results = allAppointments;
+    } else {
+      if (dropdownValueTime == 'Past') {
+        results = _runFilterPast(allAppointments);
+      } else {
+        if (dropdownValueTime == 'Upcoming') {
+          results = _runFilterUpcoming(allAppointments);
+        }
+      }
+    }
+    if (results != []) {
+      results = _runCategoryFilter(results);
+    }
+    return results;
+  }
+
+  var dropDownItemsTime = [
+    'All',
+    'Upcoming',
+    'Past',
+  ];
+
+  List<Appointment> _runCategoryFilter(List<Appointment> allAppointment) {
+    List<Appointment> results = [];
+    if (dropdownValueCategory == null ||
+        dropdownValueCategory == 'All categories') {
+      results = allAppointment;
+    } else {
+      results = allAppointment
+          .where((app) =>
+              (findDoctorById(getIt<MedicalBloc>().state.doctors, app.doctorId)!
+                      .category)
+                  .toLowerCase()
+                  .contains(dropdownValueCategory!.toLowerCase()))
+          .toList();
+    }
+
+    return results;
+  }
+
+  String? dropdownValueCategory = 'All categories';
+  List<String> categoryFilters = [];
+
+  List<Appointment> foundAppointments = [];
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
+        foundAppointments = _runFilter(medicalState.appointments);
+        categoryFilters = makeCategoryFilters(medicalState.categories);
         return SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -31,8 +128,13 @@ class _AppointmentsContentScreenState extends State<AppointmentsContentScreen> {
               children: [
                 const CustomAppbar(),
                 TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _filter = value;
+                    });
+                  },
                   decoration: InputDecoration(
-                      hintText: "Search for a date",
+                      hintText: "Search by name ",
                       helperStyle: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 15,
@@ -62,10 +164,89 @@ class _AppointmentsContentScreenState extends State<AppointmentsContentScreen> {
                           child: SingleChildScrollView(
                             child: PaginatedDataTable(
                               header: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Appointments'),
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const Text('Appointments'),
+                                  const SizedBox(
+                                    width: 24,
+                                  ),
+                                  Container(
+                                    height: 50.0,
+                                    width: width * 0.10,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: DropdownButton<String>(
+                                      value: dropdownValueTime,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownValueTime = newValue;
+                                        });
+                                        _runTimeFilter(foundAppointments);
+                                      },
+                                      iconEnabledColor: Colors.blue,
+                                      isExpanded: true,
+                                      hint: Text(
+                                        ' Choose a Category',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff252B5C)
+                                              .withOpacity(0.5),
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      items: dropDownItemsTime
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 24,
+                                  ),
+                                  Container(
+                                    height: 50.0,
+                                    width: width * 0.10,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: DropdownButton<String>(
+                                      value: dropdownValueCategory,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          dropdownValueCategory = newValue;
+                                        });
+                                        _runCategoryFilter(foundAppointments);
+                                      },
+                                      iconEnabledColor: Colors.blue,
+                                      isExpanded: true,
+                                      hint: Text(
+                                        ' Choose a Category',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff252B5C)
+                                              .withOpacity(0.5),
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                      items: categoryFilters
+                                          .map<DropdownMenuItem<String>>(
+                                              (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
                                 ],
                               ),
                               columns: const [
@@ -92,7 +273,7 @@ class _AppointmentsContentScreenState extends State<AppointmentsContentScreen> {
                                 ),
                               ],
                               source: _DataSource(
-                                appointments: medicalState.appointments,
+                                appointments: _runTimeFilter(foundAppointments),
                                 onPressed: (String appointmentId) {
                                   showDialog(
                                     context: context,

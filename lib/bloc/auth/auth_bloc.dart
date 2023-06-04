@@ -17,7 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required this.authRepository,
   }) : super(
-          const AuthState(),
+          const AuthState(loading: false),
         ) {
     on<Register>(_handleRegister);
     on<LogIn>(_handleLogIn);
@@ -30,14 +30,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     FetchUser event,
     Emitter<AuthState> emit,
   ) async {
-    UserClass user = await authRepository.fetchUser();
+    emit(
+      state.copyWith(
+        loading: true,
+      ),
+    );
+
+    UserClass? user = await authRepository.fetchUser();
     emit(
       state.copyWith(
         user: user,
       ),
     );
 
-    if (user.role == 'doctor') {
+    if (user?.role == 'doctor') {
       Doctor doctor = await authRepository.fetchDoctor();
       emit(
         state.copyWith(
@@ -45,6 +51,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+
+    emit(
+      state.copyWith(
+        loading: false,
+      ),
+    );
   }
 
   Future<void> _handleFetchDoctor(
@@ -71,12 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
     );
 
-    UserClass user = await authRepository.fetchUser();
-    emit(
-      state.copyWith(
-        user: user,
-      ),
-    );
+    add(const FetchUser());
   }
 
   Future<void> _handleLogIn(
@@ -88,12 +95,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       password: event.password,
     );
 
-    UserClass user = await authRepository.fetchUser();
-    emit(
-      state.copyWith(
-        user: user,
-      ),
-    );
+    add(const FetchUser());
   }
 
   Future<void> _handlePasswordReset(

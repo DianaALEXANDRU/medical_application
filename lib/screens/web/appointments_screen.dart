@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medical_application/controllers/controller.dart';
+
 import 'package:medical_application/screens/web/responsive_widget.dart';
 
 import 'appointments_content_screen.dart';

@@ -3,9 +3,7 @@ import 'package:medical_application/screens/web/components/dashboard_content.dar
 
 import 'package:medical_application/screens/web/responsive_widget.dart';
 
-import '../../controllers/controller.dart';
 import 'components/drawer_menu.dart';
-import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);

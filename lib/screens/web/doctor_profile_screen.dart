@@ -5,7 +5,6 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/screens/web/responsive_widget.dart';
 
-import '../../controllers/controller.dart';
 import '../../utill/helpers.dart';
 import 'components/drawer_menu.dart';
 import 'doctor_profile_content_screen.dart';
@@ -24,7 +23,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
   @override
   Widget build(BuildContext context) {
     print("###################### Doctor: ${widget.doctorId}");
-    Doctor doctor = Doctor(
+    Doctor doctor = const Doctor(
         id: '',
         firstName: '',
         lastName: '',
@@ -38,8 +37,9 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
-        if (findDoctor(medicalState.doctors, widget.doctorId) != null)
+        if (findDoctor(medicalState.doctors, widget.doctorId) != null) {
           doctor = findDoctor(medicalState.doctors, widget.doctorId)!;
+        }
         return Scaffold(
           backgroundColor: const Color.fromRGBO(247, 251, 254, 1),
           drawer: const DrawerMenu(),

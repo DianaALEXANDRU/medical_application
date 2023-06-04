@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final VoidCallback showLoginPage;
+  // final VoidCallback showLoginPage;
 
-  const RegisterScreen({Key? key, required this.showLoginPage})
-      : super(key: key);
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -59,6 +59,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
@@ -268,7 +270,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           'Already have an account?',
                         ),
                         InkWell(
-                          onTap: widget.showLoginPage,
+                          onTap: () {
+                            GoRouter.of(context).go("/login");
+                          },
                           child: Text(
                             'Log In',
                             style: TextStyle(

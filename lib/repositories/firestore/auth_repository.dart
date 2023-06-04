@@ -94,7 +94,7 @@ class AuthRepositoryFirestore extends AuthRepository {
   }
 
   @override
-  Future<UserClass> fetchUser() async {
+  Future<UserClass?> fetchUser() async {
     final id = FirebaseAuth.instance.currentUser?.uid;
 
     DocumentReference documentReference =
@@ -102,6 +102,9 @@ class AuthRepositoryFirestore extends AuthRepository {
 
     DocumentSnapshot documentSnapshot = await documentReference.get();
 
+    if (documentSnapshot.data() == null) {
+      return null;
+    }
     Map<String, dynamic> jsonData =
         documentSnapshot.data() as Map<String, dynamic>;
 

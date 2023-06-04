@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/review_box.dart';
@@ -15,11 +16,11 @@ import 'package:rating_dialog/rating_dialog.dart';
 import 'package:rating_summary/rating_summary.dart';
 
 class DoctorDetailsScreen extends StatefulWidget {
-  final Doctor doctor;
+  final String doctorId;
 
   const DoctorDetailsScreen({
     Key? key,
-    required this.doctor,
+    required this.doctorId,
   }) : super(key: key);
 
   @override
@@ -27,8 +28,22 @@ class DoctorDetailsScreen extends StatefulWidget {
 }
 
 class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
+  Doctor doctor = const Doctor(
+      id: '',
+      firstName: '',
+      lastName: '',
+      phoneNo: '',
+      role: '',
+      email: '',
+      description: '',
+      experience: '',
+      imageUrl: '',
+      category: '');
+
   @override
   Widget build(BuildContext context) {
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     List<Review> reviews = [];
@@ -48,7 +63,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
           bloc: getIt<MedicalBloc>(),
           builder: (context, medicalState) {
             reviews =
-                findReviewsByDoctorId(medicalState.reviews, widget.doctor.id);
+                findReviewsByDoctorId(medicalState.reviews, widget.doctorId);
+            doctor = findDoctor(medicalState.doctors, widget.doctorId)!;
             starList = Utility.createStarsList(reviews);
             star1 = starList[1];
             star2 = starList[2];
@@ -75,7 +91,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                     centerTitle: true,
                     leading: IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        context.pop("/doctorDetails/${widget.doctorId}");
                       },
                       icon: const Icon(
                         Icons.arrow_back,
@@ -83,7 +99,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                       ),
                     ),
                     title: Text(
-                      '${widget.doctor.firstName} ${widget.doctor.lastName}',
+                      '${doctor.firstName} ${doctor.lastName}',
                       style: const TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w500,
@@ -134,7 +150,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                         child: CachedNetworkImage(
                                           width: size.width / 2.5,
                                           height: size.height / 5,
-                                          imageUrl: widget.doctor.imageUrl,
+                                          imageUrl: doctor.imageUrl,
                                           fit: BoxFit.cover,
                                         ),
                                       ),
@@ -153,7 +169,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  '${widget.doctor.category} Specialist',
+                                  '${doctor.category} Specialist',
                                   style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
@@ -161,24 +177,6 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                   textAlign: TextAlign.left,
                                 ),
                               ),
-                              // Container(
-                              //   margin: const EdgeInsets.only(top: 3, left: 20),
-                              //   child: Row(
-                              //     children: const [
-                              //       Icon(
-                              //         Icons.star,
-                              //         color: Colors.amber,
-                              //       ),
-                              //       Text(
-                              //         " ",
-                              //         style: TextStyle(
-                              //           color: Colors.black,
-                              //           fontSize: 17,
-                              //         ),
-                              //       )
-                              //     ],
-                              //   ),
-                              // )
                             ],
                           ),
                           Row(
@@ -190,7 +188,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 20),
                                 child: Text(
-                                  'About ${widget.doctor.firstName} ${widget.doctor.lastName}',
+                                  'About ${doctor.firstName} ${doctor.lastName}',
                                   style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500,
@@ -214,7 +212,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                     right: 20,
                                   ),
                                   child: Text(
-                                    widget.doctor.description,
+                                    doctor.description,
                                     softWrap: true,
                                     style: const TextStyle(
                                       fontSize: 17,
@@ -249,7 +247,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                       ),
                                     ),
                                     Text(
-                                      '${widget.doctor.experience} Years',
+                                      '${doctor.experience} Years',
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         color: Colors.black,
@@ -279,8 +277,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          BookAppointmentScreen(
-                                              doctor: widget.doctor),
+                                          BookAppointmentScreen(doctor: doctor),
                                     ),
                                   );
                                 },
@@ -329,11 +326,11 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                     onTap: () {
                                       if (hasAppointmentConfirmedBefore(
                                           medicalState.appointments,
-                                          widget.doctor.id)) {
+                                          doctor.id)) {
                                         final dialog = RatingDialog(
                                           initialRating: 5.0,
                                           title: Text(
-                                            'Evaluates the services of Dr.${widget.doctor.firstName}${widget.doctor.lastName}',
+                                            'Evaluates the services of Dr.${doctor.firstName}${doctor.lastName}',
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               fontSize: 25,
@@ -356,7 +353,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                               addReview(
                                                   response.rating.toInt(),
                                                   response.comment,
-                                                  widget.doctor.id,
+                                                  doctor.id,
                                                   authState.user!.id);
                                               getIt<MedicalBloc>().add(
                                                   const FetchReviews()); //TODO verifica

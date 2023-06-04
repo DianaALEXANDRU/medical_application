@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/category_box.dart';
 import 'package:medical_application/components/doctor_box.dart';
@@ -66,12 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 actions: [
                   IconButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
+                      context.go("/patientHome/myProfile");
                     },
                     icon: const Icon(
                       Icons.person,
@@ -206,14 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const DoctorScreen(
-                                      category: '',
-                                    ),
-                                  ),
-                                );
+                                context.go("/patientHome/doctors/all");
                               },
                               child: const Text(
                                 ' See all',
@@ -241,9 +230,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           right: size.width * 0.05,
                           bottom: 10,
                         ),
-                        child: DoctorWidget(
-                          size: size,
-                          doctor: medicalState.doctors[index],
+                        child: GestureDetector(
+                          onTap: () {
+                            context.go(
+                                "/patientHome/doctors/all/doctorDetails/${medicalState.doctors[index].id}");
+                          },
+                          child: DoctorWidget(
+                            size: size,
+                            doctor: medicalState.doctors[index],
+                          ),
                         ),
                       ),
                     ),

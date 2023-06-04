@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/screens/doctors_screen.dart';
@@ -17,14 +18,7 @@ class CategoryWidget extends StatelessWidget {
     Constants myConstants = Constants();
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DoctorScreen(
-              category: category.name,
-            ),
-          ),
-        );
+        context.go("/patientHome/doctors/${category.name}");
       },
       child: Container(
         width: 100,

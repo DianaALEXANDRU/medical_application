@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/doctor_box.dart';
 import 'package:medical_application/main.dart';
@@ -26,7 +27,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   List<Doctor> _runFilter(List<Doctor> allDoctors) {
     List<Doctor> results = [];
-    if (widget.category != '') {
+    if (widget.category != 'all') {
       allDoctors = allDoctors
           .where((doctor) => doctor.category
               .toLowerCase()
@@ -48,6 +49,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     List<Doctor> foundDoctors = [];
@@ -63,7 +66,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
             centerTitle: true,
             leading: IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                context.go("/patientHome");
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -129,13 +132,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           ),
                           child: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DoctorDetailsScreen(
-                                      doctor: foundDoctors[index]),
-                                ),
-                              );
+                              // print("################################### ${GoRouter.of(context).location} ");
+                              context.go(
+                                  "${GoRouter.of(context).location}/doctorDetails/${foundDoctors[index].id}");
                             },
                             child: DoctorWidget(
                               size: size,

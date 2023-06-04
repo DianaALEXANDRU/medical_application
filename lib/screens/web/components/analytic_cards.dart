@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medical_application/bloc/medical_bloc.dart';
+import 'package:medical_application/main.dart';
+import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/constants.dart';
 
 import '../responsive_widget.dart';
@@ -33,42 +37,60 @@ class AnalyticInfoCardGridView extends StatelessWidget {
   final int crossAxisCount;
   final double childAspectRatio;
 
+  List<Appointment> _runFilterConfirmedApp(List<Appointment> allAppointments) {
+    List<Appointment> results = [];
+
+    results = allAppointments
+        .where((appointment) =>
+            appointment.dateAndTime.isBefore(DateTime.now()) &&
+            appointment.confirmed)
+        .toList();
+
+    return results;
+  }
+
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    return GridView.count(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      crossAxisCount: crossAxisCount,
-      crossAxisSpacing: 16.0,
-      mainAxisSpacing: 16.0,
-      childAspectRatio: childAspectRatio,
-      children: <Widget>[
-        AnalyticInfoCard(
-          info: "Doctors",
-          infoImage: 'assets/images/doctors.png',
-          infoColor: myConstants.primaryColor,
-          infoValue: 10,
-        ),
-        AnalyticInfoCard(
-          info: "Patients",
-          infoImage: 'assets/images/patient.png',
-          infoColor: myConstants.primaryColor,
-          infoValue: 43,
-        ),
-        AnalyticInfoCard(
-          info: "Appointments",
-          infoImage: 'assets/images/appointment.png',
-          infoColor: myConstants.primaryColor,
-          infoValue: 156,
-        ),
-        AnalyticInfoCard(
-          info: "Categories",
-          infoImage: 'assets/images/category.png',
-          infoColor: myConstants.primaryColor,
-          infoValue: 12,
-        ),
-      ],
+    return BlocBuilder<MedicalBloc, MedicalState>(
+      bloc: getIt<MedicalBloc>(),
+      builder: (context, medicalState) {
+        return GridView.count(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          childAspectRatio: childAspectRatio,
+          children: <Widget>[
+            AnalyticInfoCard(
+              info: "Doctors",
+              infoImage: 'assets/images/doctors.png',
+              infoColor: myConstants.primaryColor,
+              infoValue: medicalState.doctors.length,
+            ),
+            AnalyticInfoCard(
+              info: "Patients",
+              infoImage: 'assets/images/patient.png',
+              infoColor: myConstants.primaryColor,
+              infoValue: medicalState.users.length,
+            ),
+            AnalyticInfoCard(
+              info: "Appointments",
+              infoImage: 'assets/images/appointment.png',
+              infoColor: myConstants.primaryColor,
+              infoValue:
+                  _runFilterConfirmedApp(medicalState.appointments).length,
+            ),
+            AnalyticInfoCard(
+              info: "Categories",
+              infoImage: 'assets/images/category.png',
+              infoColor: myConstants.primaryColor,
+              infoValue: medicalState.categories.length,
+            ),
+          ],
+        );
+      },
     );
   }
 }

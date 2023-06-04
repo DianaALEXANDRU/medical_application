@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/screens/doctors_screen.dart';
 import 'package:medical_application/screens/my_appointment_screen.dart';
@@ -24,12 +25,6 @@ class NavBar extends StatelessWidget {
               'Diana Alexandru!',
               style: TextStyle(fontSize: 15),
             ),
-            // currentAccountPicture: Image.asset(
-            //   'assets/images/log.png',
-            //   fit: BoxFit.cover,
-            //   width: 200,
-            //   height: 200,
-            // ),
             decoration: BoxDecoration(
               gradient: myConstants.linearGradientBlue,
             ),
@@ -51,26 +46,14 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.view_list_rounded),
             title: const Text('Doctors'),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DoctorScreen(category: ''),
-                ),
-              );
+              context.go("/patientHome/doctors/all");
             },
           ),
           ListTile(
             leading: const Icon(Icons.notifications_active_outlined),
             title: const Text('My appointments'),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const MyAppointmentsScreen(),
-                ),
-              );
+              context.go("/patientHome/myAppointments");
             },
           ),
           const Divider(),
@@ -78,26 +61,14 @@ class NavBar extends StatelessWidget {
             leading: const Icon(Icons.person),
             title: const Text('My Profile'),
             onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
-              );
+              context.go("/patientHome/myProfile");
             },
           ),
-          // const ListTile(
-          //   leading: Icon(Icons.settings),
-          //   title: Text('Settings'),
-          // ),
           const Divider(),
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-
               FirebaseAuth.instance.signOut();
+              GoRouter.of(context).go("/login");
             },
             child: const ListTile(
               title: Text('Exit'),

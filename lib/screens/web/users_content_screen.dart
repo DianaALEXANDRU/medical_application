@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
+import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
+import 'package:medical_application/utill/helpers.dart';
 
 import 'components/custom_app_bar.dart';
 
@@ -16,22 +19,16 @@ class UsersContentScreen extends StatefulWidget {
 class _UsersContentScreenState extends State<UsersContentScreen> {
   String _filter = '';
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   List<UserClass> _runFilter(List<UserClass> allUsers) {
     List<UserClass> results = [];
     if (_filter.isEmpty) {
       results = allUsers;
     } else {
       results = allUsers
-          .where(
-            (cat) => cat.email.toLowerCase().contains(
-                  _filter.toLowerCase(),
-                ),
-          )
+          .where((user) =>
+              ('${user.firstName} ${user.lastName} ${user.phoneNo} ${user.email}')
+                  .toLowerCase()
+                  .contains(_filter.toLowerCase()))
           .toList();
     }
 
@@ -40,13 +37,17 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
 
   int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
 
+  List<UserClass> filterdUsers = [];
+
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     List<UserClass> foundUsers = [];
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
         foundUsers = _runFilter(medicalState.users);
+
         return SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -60,7 +61,7 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
                     });
                   },
                   decoration: InputDecoration(
-                      hintText: "Search for User, enter an email",
+                      hintText: "Search for Users",
                       helperStyle: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 15,
@@ -85,25 +86,11 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
                       flex: 5,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        // Data table widget in not scrollable so we have to wrap it in a scroll view when we have a large data set..
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: SingleChildScrollView(
                             child: PaginatedDataTable(
-                              header: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Users'),
-                                  // TextButton(
-                                  //   onPressed: () {},
-                                  //   child: const Text(
-                                  //     'Add new doctor',
-                                  //     style: TextStyle(fontSize: 16.0),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
+                              header: const Text('Users details'),
                               columns: const [
                                 DataColumn(
                                     label: Text('No.'),
@@ -117,23 +104,17 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
                                     tooltip:
                                         'represents last name of the user'),
                                 DataColumn(
-                                    label: Text('Phone No.'),
+                                    label: Text('Phone'),
                                     tooltip:
                                         'represents phone number of the user'),
                                 DataColumn(
                                     label: Text('Email'),
                                     tooltip:
                                         'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Edit'),
-                                    tooltip:
-                                        'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Delete'),
-                                    tooltip:
-                                        'represents phone number of the user'),
                               ],
-                              source: _DataSource(foundUsers),
+                              source: _DataSource(
+                                users: foundUsers,
+                              ),
                               rowsPerPage: _rowsPerPage,
                               onRowsPerPageChanged: (int? value) {
                                 setState(() {
@@ -158,19 +139,18 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
 }
 
 class _DataSource extends DataTableSource {
-//  final List<Map<String, dynamic>> _dataList;
-  final List<UserClass> doctors;
+  final List<UserClass> users;
 
-  _DataSource(this.doctors);
+  _DataSource({required this.users});
 
   @override
   DataRow getRow(int index) {
-    final data = doctors[index];
+    final data = users[index];
     return DataRow.byIndex(
       index: index,
       cells: [
         DataCell(
-          Text('${index + 1}.'),
+          Text('${index + 1}'),
         ),
         DataCell(
           Text(data.firstName),
@@ -184,18 +164,6 @@ class _DataSource extends DataTableSource {
         DataCell(
           Text(data.email),
         ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit, color: Colors.green),
-          ),
-        ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.delete, color: Colors.red),
-          ),
-        ),
       ],
     );
   }
@@ -204,7 +172,7 @@ class _DataSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => doctors.length;
+  int get rowCount => users.length;
 
   @override
   int get selectedRowCount => 0;

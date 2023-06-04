@@ -22,12 +22,30 @@ class _CategoryContentScreenState extends State<CategoryContentScreen> {
   var editMode = false;
   late Category categoryToEdit;
 
+  String _filter = '';
+
+  List<Category> _runFilter(List<Category> allCategories) {
+    List<Category> results = [];
+    if (_filter.isEmpty) {
+      results = allCategories;
+    } else {
+      results = allCategories
+          .where(
+              (cat) => (cat.name).toLowerCase().contains(_filter.toLowerCase()))
+          .toList();
+    }
+
+    return results;
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    List<Category> foundCategories = [];
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
+        foundCategories = _runFilter(medicalState.categories);
         return SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -42,6 +60,11 @@ class _CategoryContentScreenState extends State<CategoryContentScreen> {
                     SizedBox(
                       width: width * 0.35,
                       child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            _filter = value;
+                          });
+                        },
                         decoration: InputDecoration(
                             hintText: "Search for category",
                             helperStyle: TextStyle(
@@ -102,7 +125,7 @@ class _CategoryContentScreenState extends State<CategoryContentScreen> {
                           ),
                         ],
                         source: _DataSource(
-                            categories: medicalState.categories,
+                            categories: foundCategories,
                             onPressedEditMode: (category) {
                               setState(() {
                                 addMode = false;

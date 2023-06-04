@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:medical_application/screens/web/responsive_widget.dart';
 
-import '../../controllers/controller.dart';
 import 'category_content_screen.dart';
 import 'components/drawer_menu.dart';
-import 'package:provider/provider.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({Key? key}) : super(key: key);

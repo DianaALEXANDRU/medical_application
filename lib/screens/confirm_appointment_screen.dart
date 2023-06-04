@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/profile_box.dart';
@@ -30,6 +31,8 @@ class ConfirmAppointmentScreen extends StatefulWidget {
 class _ConfirmAppointmentScreenState extends State<ConfirmAppointmentScreen> {
   @override
   Widget build(BuildContext context) {
+    print(
+        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     return SizedBox(

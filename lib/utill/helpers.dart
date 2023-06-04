@@ -184,3 +184,15 @@ Doctor? findDoctor(List<Doctor> doctors, String doctorId) {
   }
   return null;
 }
+
+List<Appointment> todaysAppointments(List<Appointment> appointments) {
+  List<Appointment> todayApps = [];
+  for (var app in appointments) {
+    if (DateFormat("dd/MM/yyyy").format(app.dateAndTime) ==
+        DateFormat("dd/MM/yyyy").format(DateTime.now())) {
+      todayApps.add(app);
+    }
+  }
+
+  return todayApps;
+}
