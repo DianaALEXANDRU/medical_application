@@ -58,6 +58,8 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
     on<EditCategory>(_handleEditCategory);
     on<DeleteCategory>(_handleDeleteCategory);
     // on<DeleteCategory>(_handleDeleteCategory);
+    on<EditProfilePicture>(_handleEditProfilePicture);
+    on<EditDoctorDetails>(_handleEditDoctorDetails);
   }
 
   Future<void> _handleFetchDoctors(
@@ -347,6 +349,44 @@ class MedicalBloc extends Bloc<MedicalEvent, MedicalState> {
   ) async {
     await medicalRepository.deleteCategory(
       event.category,
+    );
+  }
+
+  Future<void> _handleEditProfilePicture(
+      EditProfilePicture event,
+      Emitter<MedicalState> emit,
+      ) async {
+    await medicalRepository.editProfilePicture(
+      event.doctorId,
+      event.selctFile,
+      event.selectedImageInBytes
+    );
+
+    List<Doctor> doctors = await medicalRepository.fetchDoctors();
+    emit(
+      state.copyWith(
+        doctors: doctors,
+      ),
+    );
+  }
+
+  Future<void> _handleEditDoctorDetails(
+      EditDoctorDetails event,
+      Emitter<MedicalState> emit,
+      ) async {
+
+    await medicalRepository.editDoctorDetails(
+      event.doctor,
+      event.category,
+      event.experience,
+      event.description,
+    );
+
+    List<Doctor> doctors = await medicalRepository.fetchDoctors();
+    emit(
+      state.copyWith(
+        doctors: doctors,
+      ),
     );
   }
 }

@@ -63,7 +63,7 @@ class _Last3MonthsAppChartWidgetState extends State<Last3MonthsAppChartWidget> {
         enable: true,
         canShowMarker: false,
         header: '',
-        format: 'point.y appointments for point.x');
+        format: 'point.y appointments in point.x');
     super.initState();
   }
 

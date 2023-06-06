@@ -282,6 +282,54 @@ class EditCategory extends MedicalEvent {
       ];
 }
 
+class EditProfilePicture extends MedicalEvent {
+  final String doctorId;
+  final String selctFile;
+  final Uint8List? selectedImageInBytes;
+
+  const EditProfilePicture({
+    required this.doctorId,
+    required this.selctFile,
+    required this.selectedImageInBytes,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+    doctorId,
+    selctFile,
+    selectedImageInBytes,
+  ];
+}
+
+class EditDoctorDetails extends MedicalEvent {
+  final Doctor doctor;
+  final String category;
+  final String experience;
+  final String description;
+
+  const EditDoctorDetails({
+    required this.doctor,
+    required this.category,
+    required this.experience,
+    required this.description,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+    doctor,
+    category,
+    experience,
+    description,
+  ];
+}
+
+
 class DeleteCategory extends MedicalEvent {
   final Category category;
 

@@ -90,8 +90,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     LogIn event,
     Emitter<AuthState> emit,
   ) async {
-    await authRepository.logIn(
-      email: event.email,
+
+    await authRepository.logIn( email: event.email,
       password: event.password,
     );
 

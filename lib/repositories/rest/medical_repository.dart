@@ -614,4 +614,49 @@ class MedicalRestRepository extends MedicalRepository {
       doc.reference.delete();
     }
   }
+
+  @override
+  Future<void> editProfilePicture(String doctorId, String selctFile, Uint8List? selectedImageInBytes) async {
+
+    UploadTask uploadTask;
+    Reference ref =
+    FirebaseStorage.instance.ref().child('doctors').child('/$selctFile');
+    final metadata = SettableMetadata(contentType: 'image/png');
+    uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+    await uploadTask.whenComplete(() => null);
+    String imageUrl = await ref.getDownloadURL();
+    print("Upload image URL $imageUrl");
+
+    //change role in doctor
+
+    final data = {"image_url": imageUrl};
+    await FirebaseFirestore.instance
+        .collection("doctor")
+        .doc(doctorId)
+        .set(data, SetOptions(merge: true));
+
+  }
+
+  @override
+  Future<void> editDoctorDetails(Doctor doctor, String category, String experience, String description) async {
+
+
+    Map<String, String> data = {};
+    if ( category != doctor.category ) {
+      data['category'] = category;
+    }
+    if (experience != doctor.experience) {
+      data['experience'] = experience;
+    }
+    if (description != doctor.description) {
+      data['description'] = description;
+    }
+
+    await FirebaseFirestore.instance
+        .collection("doctor")
+        .doc(doctor.id)
+        .set(data, SetOptions(merge: true));
+
+  }
 }

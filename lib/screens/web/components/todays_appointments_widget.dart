@@ -104,7 +104,7 @@ class TodaysCompletedAppointmentsWidget extends StatelessWidget {
                             ),
                           if (todaysApps.isNotEmpty)
                             Text(
-                              '${todaysApps.length}/${todaysAppointments(medicalState.appointments).length}',
+                              '${confirmedApp}/${todaysAppointments(medicalState.appointments).length}',
                               style: const TextStyle(
                                 color: Colors.black54,
                                 fontSize: 16,

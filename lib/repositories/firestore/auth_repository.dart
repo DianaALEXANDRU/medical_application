@@ -17,8 +17,7 @@ class AuthRepositoryFirestore extends AuthRepository {
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       )
@@ -55,10 +54,12 @@ class AuthRepositoryFirestore extends AuthRepository {
     required String password,
   }) async {
     try {
+
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
@@ -71,7 +72,10 @@ class AuthRepositoryFirestore extends AuthRepository {
   @override
   Future<void> passwordReset({required String email}) async {
     try {
+
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+
+
       // showDialog(context: context, builder: (context){
       //   return const AlertDialog(
       //     content: Text('Password  reset link sent!'),
@@ -90,11 +94,14 @@ class AuthRepositoryFirestore extends AuthRepository {
 
   @override
   Future<void> logOut() async {
+
     FirebaseAuth.instance.signOut();
+
   }
 
   @override
   Future<UserClass?> fetchUser() async {
+
     final id = FirebaseAuth.instance.currentUser?.uid;
 
     DocumentReference documentReference =
@@ -107,6 +114,8 @@ class AuthRepositoryFirestore extends AuthRepository {
     }
     Map<String, dynamic> jsonData =
         documentSnapshot.data() as Map<String, dynamic>;
+
+
 
     jsonData['id'] = id;
 

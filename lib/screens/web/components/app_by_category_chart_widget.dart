@@ -71,13 +71,16 @@ class _AppByCategoryChartWidgetState extends State<AppByCategoryChartWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
         data = getData(medicalState.categories, medicalState.doctors,
             medicalState.appointments);
-        var maxValue = data.map((e) => e.y).reduce(max) as double?;
+        print("######### $data");
+
         if (data.isNotEmpty) {
+          var maxValue = data.map((e) => e.y).reduce(max) as double?;
           return SfCartesianChart(
             plotAreaBorderWidth: 0,
             legend: Legend(isVisible: true),

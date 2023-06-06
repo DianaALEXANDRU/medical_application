@@ -79,5 +79,14 @@ abstract class MedicalRepository {
     Category category,
   );
 
+  Future<void> editProfilePicture(
+      String doctorId,
+      String selctFile,
+      Uint8List? selectedImageInBytes,
+
+      );
+
   Future<void> deleteCategory(Category category);
+
+  Future<void> editDoctorDetails(Doctor doctor, String category, String experience, String description);
 }
