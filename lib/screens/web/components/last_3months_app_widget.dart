@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/screens/web/components/last_3months_app_chart_widget.dart';
-import 'doctors_by_categories_chart_widget.dart';
 
 class Last3MonthsAppWidget extends StatelessWidget {
   const Last3MonthsAppWidget({Key? key}) : super(key: key);

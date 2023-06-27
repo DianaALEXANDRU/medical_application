@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
-import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/user.dart';
-import 'package:medical_application/utill/helpers.dart';
 
 import 'components/custom_app_bar.dart';
 
@@ -41,7 +38,6 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     List<UserClass> foundUsers = [];
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
@@ -53,7 +49,6 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const CustomAppbar(),
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -94,23 +89,19 @@ class _UsersContentScreenState extends State<UsersContentScreen> {
                               columns: const [
                                 DataColumn(
                                     label: Text('No.'),
-                                    tooltip: 'represents if user is verified.'),
+                                   ),
                                 DataColumn(
                                     label: Text('First Name'),
-                                    tooltip:
-                                        'represents first name of the user'),
+                                    ),
                                 DataColumn(
                                     label: Text('Last Name'),
-                                    tooltip:
-                                        'represents last name of the user'),
+                                    ),
                                 DataColumn(
                                     label: Text('Phone'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                   ),
                                 DataColumn(
                                     label: Text('Email'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                    ),
                               ],
                               source: _DataSource(
                                 users: foundUsers,

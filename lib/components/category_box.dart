@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medical_application/models/category.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/screens/doctors_screen.dart';
 
 class CategoryWidget extends StatelessWidget {
   final Category category;

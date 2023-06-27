@@ -49,178 +49,182 @@ class _CategoryContentScreenState extends State<CategoryContentScreen> {
         return SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
               children: [
-                Column(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    SizedBox(
-                      width: width * 0.35,
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            _filter = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                            hintText: "Search for category",
-                            helperStyle: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
-                              fontSize: 15,
-                            ),
-                            fillColor: Colors.white,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.black.withOpacity(0.5),
-                            )),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.35,
-                      child: PaginatedDataTable(
-                        header: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Categories'),
-                            TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  editMode = false;
-                                  addMode = true;
-                                });
-                              },
-                              child: const Text(
-                                'Add a new category',
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                            ),
-                          ],
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 16.0,
                         ),
-                        columns: const [
-                          DataColumn(
-                            label: Text('No.'),
-                          ),
-                          DataColumn(
-                            label: Text('Image'),
-                          ),
-                          DataColumn(
-                            label: Text('Name'),
-                          ),
-                          DataColumn(
-                            label: Text('Edit'),
-                          ),
-                          DataColumn(
-                            label: Text('Delete'),
-                          ),
-                        ],
-                        source: _DataSource(
-                            categories: foundCategories,
-                            onPressedEditMode: (category) {
+                        SizedBox(
+                          width: width * 0.35,
+                          child: TextField(
+                            onChanged: (value) {
                               setState(() {
-                                addMode = false;
-                                editMode = true;
-                                categoryToEdit = category;
+                                _filter = value;
                               });
                             },
-                            onPressedDelete: (category) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text('Delete Category'),
-                                    content: existingDoctorsByCategory(
-                                              medicalState.doctors,
-                                              category.name,
-                                            ) ==
-                                            0
-                                        ? const Text(
-                                            'Are you sure you want to delete this category?',
-                                          )
-                                        : Text(
-                                            'You cant delete this category. ${existingDoctorsByCategory(
-                                              medicalState.doctors,
-                                              category.name,
-                                            )} doctors exist in this Category',
-                                          ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: existingDoctorsByCategory(
+                            decoration: InputDecoration(
+                                hintText: "Search for category",
+                                helperStyle: TextStyle(
+                                  color: Colors.black.withOpacity(0.5),
+                                  fontSize: 15,
+                                ),
+                                fillColor: Colors.white,
+                                filled: true,
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide.none,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.black.withOpacity(0.5),
+                                )),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.35,
+                          child: PaginatedDataTable(
+                            header: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Categories'),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      editMode = false;
+                                      addMode = true;
+                                    });
+                                  },
+                                  child: const Text(
+                                    'Add a new category',
+                                    style: TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            columns: const [
+                              DataColumn(
+                                label: Text('No.'),
+                              ),
+                              DataColumn(
+                                label: Text('Image'),
+                              ),
+                              DataColumn(
+                                label: Text('Name'),
+                              ),
+                              DataColumn(
+                                label: Text('Edit'),
+                              ),
+                              DataColumn(
+                                label: Text('Delete'),
+                              ),
+                            ],
+                            source: _DataSource(
+                                categories: foundCategories,
+                                onPressedEditMode: (category) {
+                                  setState(() {
+                                    addMode = false;
+                                    editMode = true;
+                                    categoryToEdit = category;
+                                  });
+                                },
+                                onPressedDelete: (category) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: const Text('Delete Category'),
+                                        content: existingDoctorsByCategory(
                                                   medicalState.doctors,
                                                   category.name,
                                                 ) ==
                                                 0
-                                            ? const Text('No')
-                                            : const Text('Cancel'),
-                                      ),
-                                      if (existingDoctorsByCategory(
-                                            medicalState.doctors,
-                                            category.name,
-                                          ) ==
-                                          0)
-                                        TextButton(
-                                          onPressed: () {
-                                            getIt<MedicalBloc>().add(
-                                              DeleteCategory(
-                                                  category: category),
-                                            );
+                                            ? const Text(
+                                                'Are you sure you want to delete this category?',
+                                              )
+                                            : Text(
+                                                'You cant delete this category. ${existingDoctorsByCategory(
+                                                  medicalState.doctors,
+                                                  category.name,
+                                                )} doctors exist in this Category',
+                                              ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: existingDoctorsByCategory(
+                                                      medicalState.doctors,
+                                                      category.name,
+                                                    ) ==
+                                                    0
+                                                ? const Text('No')
+                                                : const Text('Cancel'),
+                                          ),
+                                          if (existingDoctorsByCategory(
+                                                medicalState.doctors,
+                                                category.name,
+                                              ) ==
+                                              0)
+                                            TextButton(
+                                              onPressed: () {
+                                                getIt<MedicalBloc>().add(
+                                                  DeleteCategory(
+                                                      category: category),
+                                                );
 
-                                            getIt<MedicalBloc>().add(
-                                              const FetchCategories(),
-                                            );
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Yes'),
-                                        ),
-                                    ],
-                                    elevation: 4.0,
+                                                getIt<MedicalBloc>().add(
+                                                  const FetchCategories(),
+                                                );
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text('Yes'),
+                                            ),
+                                        ],
+                                        elevation: 4.0,
+                                      );
+                                    },
                                   );
-                                },
-                              );
-                            }),
-                        rowsPerPage: _rowsPerPage,
-                        onRowsPerPageChanged: (int? value) {
+                                }),
+                            rowsPerPage: _rowsPerPage,
+                            onRowsPerPageChanged: (int? value) {
+                              setState(() {
+                                _rowsPerPage =
+                                    value ?? PaginatedDataTable.defaultRowsPerPage;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 56,
+                    ),
+                    if (addMode == true)
+                      AddCategoryWidget(
+                        onPressed: () {
                           setState(() {
-                            _rowsPerPage =
-                                value ?? PaginatedDataTable.defaultRowsPerPage;
+                            addMode = false;
                           });
                         },
                       ),
-                    )
+                    if (editMode == true)
+                      EditCategoryWidget(
+                          onPressedCancel: () {
+                            setState(() {
+                              editMode = false;
+                            });
+                          },
+                          category: categoryToEdit),
                   ],
                 ),
-                const SizedBox(
-                  width: 56,
-                ),
-                if (addMode == true)
-                  AddCategoryWidget(
-                    onPressed: () {
-                      setState(() {
-                        addMode = false;
-                      });
-                    },
-                  ),
-                if (editMode == true)
-                  EditCategoryWidget(
-                      onPressedCancel: () {
-                        setState(() {
-                          editMode = false;
-                        });
-                      },
-                      category: categoryToEdit),
               ],
             ),
           ),

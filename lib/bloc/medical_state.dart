@@ -10,6 +10,7 @@ class MedicalState extends Equatable {
   final List<AppointmentHours> freeHours;
   final List<int> programDays;
   final Map<int, List<AppointmentHours>> program;
+  final List<Program> programList;
 
   MedicalState({
     required List<Doctor> doctors,
@@ -20,6 +21,7 @@ class MedicalState extends Equatable {
     required List<UserClass> users,
     required List<AppointmentHours> freeHours,
     required List<int> programDays,
+    required List<Program> programList,
     required this.program,
   })  : doctors = List.unmodifiable(doctors),
         categories = List.unmodifiable(categories),
@@ -28,7 +30,8 @@ class MedicalState extends Equatable {
         reviews = List.unmodifiable(reviews),
         users = List.unmodifiable(users),
         freeHours = List.unmodifiable(freeHours),
-        programDays = List.unmodifiable(programDays);
+        programDays = List.unmodifiable(programDays),
+        programList = List.unmodifiable(programList);
 
   MedicalState copyWith({
     List<Doctor>? doctors,
@@ -40,6 +43,7 @@ class MedicalState extends Equatable {
     List<AppointmentHours>? freeHours,
     List<int>? programDays,
     Map<int, List<AppointmentHours>>? program,
+    List<Program>? programList,
   }) {
     return MedicalState(
       doctors: doctors ?? this.doctors,
@@ -51,6 +55,7 @@ class MedicalState extends Equatable {
       freeHours: freeHours ?? this.freeHours,
       programDays: programDays ?? this.programDays,
       program: program ?? this.program,
+      programList: programList ?? this.programList,
     );
   }
 
@@ -68,5 +73,6 @@ class MedicalState extends Equatable {
         freeHours,
         programDays,
         program,
+        programList,
       ];
 }

@@ -127,7 +127,7 @@ class MedicalRestRepository extends MedicalRepository {
     for (DocumentSnapshot collection1Doc in collection1Snapshot.docs) {
       String uid = collection1Doc.id;
 
-      try {
+
         DocumentSnapshot collection2Doc =
             collection2Snapshot.docs.firstWhere((doc) => doc.id == uid);
 
@@ -141,15 +141,59 @@ class MedicalRestRepository extends MedicalRepository {
           'description': collection2Doc.get('description'),
           'experience': collection2Doc.get('experience'),
           'image_url': collection2Doc.get('image_url'),
-          'category': collection2Doc.get('category')
+          'category': collection2Doc.get('category'),
+          'available': collection2Doc.get('available'),
         };
 
         DoctorEntity currentDoctor = DoctorEntity.fromJson(combinedMap);
 
         combinedList.add(Doctor.fromEntity(currentDoctor));
-      } catch (e) {
-        print('No document found for id: ${e.toString()}');
-      }
+
+    }
+
+    return combinedList;
+  }
+
+  @override
+  Future<List<Doctor>> fetchAvailableDoctors() async {
+    List<Doctor> combinedList = [];
+
+    QuerySnapshot users = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: "doctor")
+        .get();
+
+    QuerySnapshot doctors =
+    await FirebaseFirestore.instance
+        .collection('doctor')
+        .where('available', isEqualTo: true)
+        .get();
+
+    for (DocumentSnapshot doctor in doctors.docs) {
+      String uid = doctor.id;
+
+
+        DocumentSnapshot user =
+        users.docs.firstWhere((doc) => doc.id == uid);
+
+        Map<String, dynamic> combinedMap = {
+          'id': uid,
+          'first_name': user.get('first_name'),
+          'last_name': user.get('last_name'),
+          'phone_no': user.get('phone_no'),
+          'role': user.get('role'),
+          'email': user.get('email'),
+          'description': doctor.get('description'),
+          'experience': doctor.get('experience'),
+          'image_url': doctor.get('image_url'),
+          'category': doctor.get('category'),
+          'available': doctor.get('available'),
+        };
+
+        DoctorEntity currentDoctor = DoctorEntity.fromJson(combinedMap);
+
+        combinedList.add(Doctor.fromEntity(currentDoctor));
+
     }
 
     return combinedList;
@@ -165,7 +209,6 @@ class MedicalRestRepository extends MedicalRepository {
     for (DocumentSnapshot app in appointmentsSnapshot.docs) {
       String uid = app.id;
 
-      print("  ############################ App Snap: ${app.data()}");
 
       Map<String, dynamic> appointmentMap = {
         'id': uid,
@@ -178,6 +221,7 @@ class MedicalRestRepository extends MedicalRepository {
 
       AppointmentEntity appointment =
           AppointmentEntity.fromJson(appointmentMap);
+
 
       appointmentsList.add(Appointment.fromEntity(appointment));
     }
@@ -389,6 +433,32 @@ class MedicalRestRepository extends MedicalRepository {
   }
 
   @override
+  Future< List<Program>> fetchProgramForAdmin(String doctorId) async {
+    final program = await FirebaseFirestore.instance
+        .collection('doctor')
+        .doc(doctorId)
+        .collection('program')
+        .get();
+
+    List<Program> programList=[];
+
+    if (program.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot
+      in program.docs) {
+        Map<String, dynamic> p = documentSnapshot.data();
+        if (p['start_hour'] == null) {
+          return [];
+        }
+        Program pr=Program(day:getDayOfWeek(p['day_of_week']) , startHour: p['start_hour'], endHour: p['end_hour']);
+        programList.add(pr);
+        }
+      }
+
+
+    return programList;
+  }
+
+  @override
   Future<void> makeAppointment(
       String patientId, String doctorId, DateTime date, String hour) async {
     final Map<String, dynamic> app = {
@@ -457,11 +527,11 @@ class MedicalRestRepository extends MedicalRepository {
     for (var p in program) {
       final Map<String, dynamic> newProgram = {
         "day_of_week": getDayNumber(p.day),
-        "start_time": p.startHour,
-        "end_time": p.endHour,
+        "start_hour": p.startHour,
+        "end_hour": p.endHour,
       };
 
-      final program = await FirebaseFirestore.instance
+       await FirebaseFirestore.instance
           .collection('doctor')
           .doc(doctorId)
           .collection('program')
@@ -478,16 +548,25 @@ class MedicalRestRepository extends MedicalRepository {
       List<Program> program,
       String selctFile,
       Uint8List? selectedImageInBytes) async {
-    //add image to storage
-    UploadTask uploadTask;
-    Reference ref =
-        FirebaseStorage.instance.ref().child('doctors').child('/$selctFile');
-    final metadata = SettableMetadata(contentType: 'image/png');
-    uploadTask = ref.putData(selectedImageInBytes!, metadata);
 
-    await uploadTask.whenComplete(() => null);
-    String imageUrl = await ref.getDownloadURL();
-    print("Upload image URL $imageUrl");
+    String imageUrl='';
+    if(selectedImageInBytes == null) {
+      imageUrl =
+      'https://firebasestorage.googleapis.com/v0/b/fluttermedicalapp-ab48a.appspot.com/o/CATEGORY%2Fdefault_category.png?alt=media&token=69d75b49-e6c5-4e83-96c1-1bf3003f9560';
+    }else{
+      //add image to storage
+      UploadTask uploadTask;
+      Reference ref =
+      FirebaseStorage.instance.ref().child('doctors').child('/$selctFile');
+      final metadata = SettableMetadata(contentType: 'image/png');
+      uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+      await uploadTask.whenComplete(() => null);
+      imageUrl = await ref.getDownloadURL();
+
+    }
+
+
 
     //change role in doctor
 
@@ -503,29 +582,26 @@ class MedicalRestRepository extends MedicalRepository {
       "category": category,
       "description": description,
       "experience": experience,
-      "image_url": imageUrl
+      "image_url": imageUrl,
+      "available": true,
     };
 
     await FirebaseFirestore.instance
         .collection("doctor")
         .doc(userId)
-        .set(newDoctor)
-        .then((value) {
-      print("Document added successfully!");
-    }).catchError((error) {
-      print("Failed to add document: $error");
-    });
+        .set(newDoctor);
+
 
     //add program
 
     for (var p in program) {
       final Map<String, dynamic> newProgram = {
         "day_of_week": getDayNumber(p.day),
-        "start_time": p.startHour,
-        "end_time": p.endHour,
+        "start_hour": p.startHour,
+        "end_hour": p.endHour,
       };
 
-      final program = await FirebaseFirestore.instance
+       await FirebaseFirestore.instance
           .collection('doctor')
           .doc(userId)
           .collection('program')
@@ -536,25 +612,33 @@ class MedicalRestRepository extends MedicalRepository {
   @override
   Future<void> addCategory(
       String name, String selctFile, Uint8List? selectedImageInBytes) async {
-    try {
-      UploadTask uploadTask;
-      Reference ref = FirebaseStorage.instance
-          .ref()
-          .child('CATEGORY')
-          .child('/' + selctFile);
-      final metadata = SettableMetadata(contentType: 'image/png');
-      uploadTask = ref.putData(selectedImageInBytes!, metadata);
 
-      await uploadTask.whenComplete(() => null);
-      String imageUrl = await ref.getDownloadURL();
-      print("Upload image URL " + imageUrl);
+       String  imageUrl='';
+      if(selectedImageInBytes == null){
+        imageUrl =
+            'https://firebasestorage.googleapis.com/v0/b/fluttermedicalapp-ab48a.appspot.com/o/CATEGORY%2Fdefault_category.png?alt=media&token=69d75b49-e6c5-4e83-96c1-1bf3003f9560';
+
+      }else{
+
+        UploadTask uploadTask;
+        Reference ref = FirebaseStorage.instance
+            .ref()
+            .child('CATEGORY')
+            .child('/$selctFile');
+        final metadata = SettableMetadata(contentType: 'image/png');
+        uploadTask = ref.putData(selectedImageInBytes!, metadata);
+
+        await uploadTask.whenComplete(() => null);
+        imageUrl = await ref.getDownloadURL();
+
+
+
+      }
 
       final Map<String, dynamic> newCategory = {"name": name, "url": imageUrl};
 
       await FirebaseFirestore.instance.collection("category").add(newCategory);
-    } catch (e) {
-      print(e);
-    }
+
   }
 
   @override
@@ -581,7 +665,6 @@ class MedicalRestRepository extends MedicalRepository {
 
             await uploadTask.whenComplete(() => null);
             imageUrl = await ref.getDownloadURL();
-            print("Upload image URL $imageUrl");
 
             Map<String, dynamic> categoryMap = {'url': imageUrl};
             await FirebaseFirestore.instance
@@ -626,7 +709,7 @@ class MedicalRestRepository extends MedicalRepository {
 
     await uploadTask.whenComplete(() => null);
     String imageUrl = await ref.getDownloadURL();
-    print("Upload image URL $imageUrl");
+
 
     //change role in doctor
 
@@ -657,6 +740,56 @@ class MedicalRestRepository extends MedicalRepository {
         .collection("doctor")
         .doc(doctor.id)
         .set(data, SetOptions(merge: true));
+
+  }
+
+  @override
+  Future<void> editDoctorAvailability(String doctorId, String availability) async {
+
+    bool available= availability=='available'? true: false;
+    Map<String, dynamic> data = {"available": available};
+
+    await FirebaseFirestore.instance
+        .collection("doctor")
+        .doc(doctorId)
+        .set(data, SetOptions(merge: true));
+
+  }
+
+  @override
+  Future<void> deleteProgram(String doctorId, String day, String start, String end) async {
+    QuerySnapshot querySnapshot =await FirebaseFirestore.instance
+        .collection('doctor')
+        .doc(doctorId)
+        .collection('program')
+         .where('day_of_week', isEqualTo: getDayNumber(day))
+         .where('start_hour', isEqualTo: start)
+         .where('end_hour', isEqualTo: end)
+         .get();
+
+       var id= querySnapshot.docs[0].id;
+      await FirebaseFirestore.instance
+            .collection('doctor')
+            .doc(doctorId)
+            .collection('program')
+            .doc(id)
+            .delete();
+  }
+
+  @override
+  Future<void> addOneProgram(Program program, String doctorId) async {
+
+      final Map<String, dynamic> newProgram = {
+        "day_of_week": getDayNumber(program.day),
+        "start_hour": program.startHour,
+        "end_hour": program.endHour,
+      };
+
+       await FirebaseFirestore.instance
+          .collection('doctor')
+          .doc(doctorId)
+          .collection('program')
+          .add(newProgram);
 
   }
 }

@@ -32,10 +32,8 @@ class _DocByCatChartWidgetState extends State<DocByCatChartWidget> {
 
     for (var cat in allCat) {
       int nr = docNumberByCategory(allDoc, cat.name);
-      //if(nr !=0){
       DocByCategoryData doc = DocByCategoryData(cat.name, nr);
       dataList.add(doc);
-      //}
     }
     return dataList;
   }

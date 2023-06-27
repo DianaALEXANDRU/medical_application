@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +7,7 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 
 import '../bloc/medical_bloc.dart';
-import 'forgot_password_screen.dart';
+import '../utill/helpers.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -37,52 +38,89 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
+  var errorMessage = '';
+  var errorMessageForEmail = '';
+  var errorMessageForPassword = '';
+
+  void resetErrorMesssage() {
+    setState(() {
+      errorMessage = '';
+      errorMessageForEmail = '';
+      errorMessageForPassword = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print(
-        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
-    return BlocListener<AuthBloc, AuthState>(
-      bloc: getIt<AuthBloc>(),
-      listenWhen: (oldState, newState) {
-        print(
-            "############# ${oldState.loading} ### ${newState.loading} ### ${newState.user} ");
-        return (oldState.loading && !newState.loading && newState.user != null);
-      },
-      listener: (context, state) async {
-        final role = getIt<AuthBloc>().state.user?.role;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          bloc: getIt<AuthBloc>(),
+          listenWhen: (oldState, newState) {
+            return (oldState.loading &&
+                !newState.loading &&
+                newState.user != null);
+          },
+          listener: (context, state) async {
+            final role = getIt<AuthBloc>().state.user?.role;
 
-        if (role == 'user') {
-          getIt<MedicalBloc>().add(
-            FetchAppointmentsForUser(userId: getIt<AuthBloc>().state.user!.id),
-          );
-          getIt<MedicalBloc>().add(
-            const FetchReviews(),
-          );
+            if (role == 'user') {
+              getIt<MedicalBloc>().add(
+                FetchAppointmentsForUser(
+                    userId: getIt<AuthBloc>().state.user!.id),
+              );
+              getIt<MedicalBloc>().add(
+                const FetchReviews(),
+              );
 
-          GoRouter.of(context).go("/patientHome");
-          return;
-        }
-        if (role == 'doctor') {
-          getIt<MedicalBloc>().add(
-            FetchAppointmentsForDoctor(
-                userId: getIt<AuthBloc>().state.user!.id),
-          );
-          getIt<MedicalBloc>().add(
-            const FetchUsers(),
-          );
-          getIt<MedicalBloc>().add(
-            FetchReviewsByDoctorId(doctorId: getIt<AuthBloc>().state.user!.id),
-          );
-          getIt<MedicalBloc>()
-              .add(FetchProgram(doctorId: getIt<AuthBloc>().state.user!.id));
+              getIt<MedicalBloc>().add(
+                const FetchDoctors(),
+              );
 
-          GoRouter.of(context).go("/doctorHome");
-          return;
-        }
-        GoRouter.of(context).go("/login");
-      },
+              GoRouter.of(context).go("/patientHome");
+              return;
+            }
+            if (role == 'doctor') {
+              getIt<MedicalBloc>().add(
+                FetchAppointmentsForDoctor(
+                    userId: getIt<AuthBloc>().state.user!.id),
+              );
+              getIt<MedicalBloc>().add(
+                const FetchUsers(),
+              );
+              getIt<MedicalBloc>().add(
+                FetchReviewsByDoctorId(
+                    doctorId: getIt<AuthBloc>().state.user!.id),
+              );
+              getIt<MedicalBloc>().add(
+                  FetchProgram(doctorId: getIt<AuthBloc>().state.user!.id));
+
+              GoRouter.of(context).go("/doctorHome");
+              return;
+            }
+
+            FirebaseAuth.instance.signOut();
+            setState(() {
+              errorMessage='Invalid account!';
+            });
+
+          },
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          bloc: getIt<AuthBloc>(),
+          listenWhen: (oldState, newState) {
+            return (oldState.errorMessage != newState.errorMessage);
+          },
+          listener: (context, state) async {
+            setState(() {
+              errorMessage = state.errorMessage!;
+            });
+          },
+        ),
+
+      ],
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
@@ -151,6 +189,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      if (errorMessageForEmail != '')
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              errorMessageForEmail,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 30,
                       ),
@@ -174,6 +228,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      if (errorMessageForPassword != '')
+                        Column(
+                          children: [
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            Text(
+                              errorMessageForPassword,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 25,
                       ),
@@ -197,7 +267,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50.0,
                         child: ElevatedButton(
                           onPressed: () {
-                            logIn(); //.then((value) {GoRouter.of(context).go("/");});
+                            resetErrorMesssage();
+                            if (isEmail(emailController.text.trim()) &&
+                                passController.text.trim().isNotEmpty) {
+                              logIn();
+                            } else {
+                              setState(() {
+                                if (passController.text.trim().isEmpty) {
+                                  errorMessageForPassword =
+                                  ' You must enter a password!';
+                                }
+                                if (emailController.text.trim().isEmpty) {
+                                  errorMessageForEmail =
+                                  'You must enter an email!';
+                                } else {
+                                  errorMessageForEmail =
+                                  'The text entered in the email field is not an email!';
+                                }
+                              });
+                            }
                           },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
@@ -244,6 +332,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 24,
+                      ),
+                      if (errorMessage != '')
+                        Text(
+                          errorMessage,
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                     ],
                   ),
                 ),

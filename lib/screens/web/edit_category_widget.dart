@@ -42,7 +42,20 @@ class _EditCategoryWidgetState extends State<EditCategoryWidget> {
   }
 
   late TextEditingController nameController = TextEditingController();
+  var errorMessageForNameField='';
+  bool isValid(){
+    if(nameController.text.trim().length>=3 && nameController.text.trim().length<=25){
+      return true;
+    }
+    return false;
+  }
 
+  @override
+  void dispose() {
+    nameController.dispose();
+
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     nameController = TextEditingController(text: widget.category.name);
@@ -79,6 +92,19 @@ class _EditCategoryWidgetState extends State<EditCategoryWidget> {
               ),
             ],
           ),
+        ),
+        Column(
+          children: [
+            const SizedBox(height: 8,),
+            Text(
+              errorMessageForNameField,
+              style: const TextStyle(
+                fontSize: 12.0,
+                color: Colors.redAccent,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 8.0),
         Container(
@@ -160,14 +186,21 @@ class _EditCategoryWidgetState extends State<EditCategoryWidget> {
           children: [
             ElevatedButton(
               onPressed: () {
-                getIt<MedicalBloc>().add(
-                  EditCategory(
-                    name: nameController.text.trim(),
-                    selctFile: selctFile,
-                    selectedImageInBytes: selectedImageInBytes,
-                    category: widget.category,
-                  ),
-                );
+                if(isValid()){
+                  getIt<MedicalBloc>().add(
+                    EditCategory(
+                      name: nameController.text.trim(),
+                      selctFile: selctFile,
+                      selectedImageInBytes: selectedImageInBytes,
+                      category: widget.category,
+                    ),
+                  );
+                }else{
+                  setState(() {
+                    errorMessageForNameField='The entered name must contain between 3 and 25 characters!';
+                  });
+                }
+
               },
               child: const Text('Edit Category'),
             ),

@@ -19,7 +19,6 @@ class DashboardContnet extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const CustomAppbar(),
             const SizedBox(
               height: 16.0,
             ),

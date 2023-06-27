@@ -6,7 +6,6 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/utill/helpers.dart';
 
-import '../../models/doctor.dart';
 import 'components/custom_app_bar.dart';
 
 class AppointmentsContentScreen extends StatefulWidget {
@@ -126,7 +125,7 @@ class _AppointmentsContentScreenState extends State<AppointmentsContentScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const CustomAppbar(),
+
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -385,11 +384,11 @@ class _DataSource extends DataTableSource {
                 : () {
                     getIt<MedicalBloc>().add(ConfirmeAppointment(
                         appointmentId: appointments[index].id));
-                    Future.delayed(const Duration(milliseconds: 100), () {
-                      getIt<MedicalBloc>().add(
-                        const FetchAllAppointments(),
-                      );
-                    });
+                    // Future.delayed(const Duration(milliseconds: 100), () {
+                    //   getIt<MedicalBloc>().add(
+                    //     const FetchAllAppointments(),
+                    //   );
+                    // });
                   },
             icon: const Icon(
               Icons.verified, //color: Colors.green

@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../bloc/medical_bloc.dart';
+import '../../../main.dart';
 import '../../../models/constants.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -14,7 +17,7 @@ class DrawerMenu extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/logo.png'),
+            child: Image.asset('assets/images/log.png'),
           ),
           ListTile(
             horizontalTitleGap: 0.8,
@@ -24,7 +27,7 @@ class DrawerMenu extends StatelessWidget {
             ),
             title: const Text('Dashboard'),
             onTap: () {
-              GoRouter.of(context).go("/");
+              GoRouter.of(context).go("/dashboard");
             },
           ),
           const Padding(
@@ -42,6 +45,9 @@ class DrawerMenu extends StatelessWidget {
             ),
             title: const Text('Category'),
             onTap: () {
+              getIt<MedicalBloc>().add(
+                const FetchCategories(),
+              );
               GoRouter.of(context).go("/category");
             },
           ),
@@ -53,18 +59,13 @@ class DrawerMenu extends StatelessWidget {
             ),
             title: const Text('Doctors'),
             onTap: () {
+              getIt<MedicalBloc>().add(
+                const FetchDoctors(),
+              );
               GoRouter.of(context).go("/doctors");
             },
           ),
-          ListTile(
-            horizontalTitleGap: 0.8,
-            leading: Icon(
-              Icons.schedule,
-              color: myConstants.primaryColor,
-            ),
-            title: const Text('Programs'),
-            onTap: () {},
-          ),
+
           ListTile(
             horizontalTitleGap: 0.8,
             leading: Icon(
@@ -73,18 +74,13 @@ class DrawerMenu extends StatelessWidget {
             ),
             title: const Text('Appointments'),
             onTap: () {
+              getIt<MedicalBloc>().add(
+                const FetchAllAppointments(),
+              );
               GoRouter.of(context).go("/appointments");
             },
           ),
-          ListTile(
-            horizontalTitleGap: 0.8,
-            leading: Icon(
-              Icons.reviews,
-              color: myConstants.primaryColor,
-            ),
-            title: const Text('Reviews'),
-            onTap: () {},
-          ),
+
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0 * 2),
             child: Divider(
@@ -100,6 +96,9 @@ class DrawerMenu extends StatelessWidget {
             ),
             title: const Text('Users'),
             onTap: () {
+              getIt<MedicalBloc>().add(
+                const FetchUsers(),
+              );
               GoRouter.of(context).go("/users");
             },
           ),
@@ -117,7 +116,10 @@ class DrawerMenu extends StatelessWidget {
               color: myConstants.primaryColor,
             ),
             title: const Text('Exit'),
-            onTap: () {},
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+              GoRouter.of(context).go("/loginWeb");
+            },
           ),
         ],
       ),

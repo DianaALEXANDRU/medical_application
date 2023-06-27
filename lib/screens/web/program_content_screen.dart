@@ -70,7 +70,6 @@ class _ProgramContentScreenState extends State<ProgramContentScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const CustomAppbar(),
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -103,7 +102,6 @@ class _ProgramContentScreenState extends State<ProgramContentScreen> {
                       flex: 5,
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        // Data table widget in not scrollable so we have to wrap it in a scroll view when we have a large data set..
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: SingleChildScrollView(
@@ -170,27 +168,22 @@ class _ProgramContentScreenState extends State<ProgramContentScreen> {
                               columns: const [
                                 DataColumn(
                                     label: Text('No.'),
-                                    tooltip: 'represents if user is verified.'),
+                                   ),
                                 DataColumn(
                                     label: Text('First Name'),
-                                    tooltip:
-                                        'represents first name of the user'),
+                                   ),
                                 DataColumn(
                                     label: Text('Last Name'),
-                                    tooltip:
-                                        'represents last name of the user'),
+                                  ),
                                 DataColumn(
                                     label: Text('Phone'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                    ),
                                 DataColumn(
                                     label: Text('Category'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                    ),
                                 DataColumn(
                                     label: Text('View more'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                    ),
                               ],
                               source: dropdownValueCategory != null
                                   ? _DataSource(

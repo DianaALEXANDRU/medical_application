@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:medical_application/screens/login_screen.dart';
 import 'package:medical_application/screens/register_screen.dart';
 
 class AuthPage extends StatefulWidget {
@@ -20,10 +19,7 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    // if (showLoginPage) {
-    //   return LoginScreen(showRegisterPage: toggleScreens);
-    // } else {
-    return RegisterScreen();
+    return const RegisterScreen();
     // }
   }
 }

@@ -14,6 +14,16 @@ class FetchDoctors extends MedicalEvent {
   List<Object?> get props => [];
 }
 
+class FetchAvailableDoctors extends MedicalEvent {
+  const FetchAvailableDoctors();
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [];
+}
+
 class FetchUsers extends MedicalEvent {
   const FetchUsers();
 
@@ -90,6 +100,30 @@ class FetchReviewsByDoctorId extends MedicalEvent {
   List<Object?> get props => [doctorId];
 }
 
+class AddReview extends MedicalEvent {
+  final int stars;
+  final String comment;
+  final String doctorId;
+  final String userId;
+
+  const AddReview(
+      {required this.stars,
+      required this.comment,
+      required this.doctorId,
+      required this.userId});
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        stars,
+        comment,
+        doctorId,
+        userId,
+      ];
+}
+
 class FetchFreeHours extends MedicalEvent {
   final String doctorId;
   final DateTime date;
@@ -119,6 +153,18 @@ class FetchProgram extends MedicalEvent {
   final String doctorId;
 
   const FetchProgram({required this.doctorId});
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [doctorId];
+}
+
+class FetchProgramList extends MedicalEvent {
+  final String doctorId;
+
+  const FetchProgramList({required this.doctorId});
 
   @override
   bool get stringify => true;
@@ -298,10 +344,10 @@ class EditProfilePicture extends MedicalEvent {
 
   @override
   List<Object?> get props => [
-    doctorId,
-    selctFile,
-    selectedImageInBytes,
-  ];
+        doctorId,
+        selctFile,
+        selectedImageInBytes,
+      ];
 }
 
 class EditDoctorDetails extends MedicalEvent {
@@ -322,13 +368,31 @@ class EditDoctorDetails extends MedicalEvent {
 
   @override
   List<Object?> get props => [
-    doctor,
-    category,
-    experience,
-    description,
-  ];
+        doctor,
+        category,
+        experience,
+        description,
+      ];
 }
 
+class EditDoctorAvailability extends MedicalEvent {
+  final String doctorId;
+  final String availability;
+
+  const EditDoctorAvailability({
+    required this.doctorId,
+    required this.availability,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        doctorId,
+        availability,
+      ];
+}
 
 class DeleteCategory extends MedicalEvent {
   final Category category;
@@ -340,4 +404,48 @@ class DeleteCategory extends MedicalEvent {
 
   @override
   List<Object?> get props => [category];
+}
+
+class DeleteProgram extends MedicalEvent {
+  final String doctorId;
+  final String day;
+  final String start;
+  final String end;
+
+  const DeleteProgram({
+    required this.doctorId,
+    required this.day,
+    required this.start,
+    required this.end,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        doctorId,
+        day,
+        start,
+        end,
+      ];
+}
+
+class AddOneProgram extends MedicalEvent {
+  final String doctorId;
+  final Program program;
+
+  const AddOneProgram({
+    required this.doctorId,
+    required this.program,
+  });
+
+  @override
+  bool get stringify => true;
+
+  @override
+  List<Object?> get props => [
+        doctorId,
+        program,
+      ];
 }

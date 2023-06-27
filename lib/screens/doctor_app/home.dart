@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/components/doctor/appointment_box_doctor.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/screens/doctor_app/nav_bar_doctor.dart';
-import 'package:medical_application/screens/doctor_app/profile_screen.dart';
 import 'package:medical_application/utill/helpers.dart';
 
 import '../../bloc/medical_bloc.dart';
@@ -40,8 +40,6 @@ class _DoctorHomeState extends State<DoctorHome> {
             builder: (context, medicalState) {
               todayAppointments =
                   todaysAppointments(medicalState.appointmentsByDoctor);
-              print(
-                  "Today app --------------------------> : ${todayAppointments.length} ");
               return Scaffold(
                 drawer: const NavBarDoctor(),
                 resizeToAvoidBottomInset: false,
@@ -52,13 +50,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                   actions: [
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const ProfileForDoctorScreen(),
-                          ),
-                        );
+                        context.go("/doctorHome/myProfile");
                       },
                       icon: const Icon(
                         Icons.person,
@@ -156,7 +148,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                               size: size,
                               app: todayAppointments[index],
                               disable: false,
-                              confirme: false,
+                              confirme: todayAppointments[index].confirmed,
                             ),
                           ),
                         ),
@@ -230,7 +222,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                               ),
                               OutlinedButton.icon(
                                 onPressed: () {
-                                  // Add your onPressed logic here
+                                  context.go("/doctorHome/program");
+
                                 },
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
@@ -247,7 +240,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                                   Icons.view_list_rounded,
                                   color: myConstants.primaryColor,
                                 ),
-                                label: Text(
+                                label: const Text(
                                   'View Program',
                                   style: TextStyle(
                                       fontSize: 18.0, color: Colors.black54),
@@ -258,7 +251,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                               ),
                               OutlinedButton.icon(
                                 onPressed: () {
-                                  // Add your onPressed logic here
+                                  context.go("/doctorHome/appointments");
+
                                 },
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
@@ -275,7 +269,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                                   Icons.view_list_rounded,
                                   color: myConstants.primaryColor,
                                 ),
-                                label: Text(
+                                label: const Text(
                                   'View other appointments',
                                   style: TextStyle(
                                       fontSize: 18.0, color: Colors.black54),
@@ -286,7 +280,8 @@ class _DoctorHomeState extends State<DoctorHome> {
                               ),
                               OutlinedButton.icon(
                                 onPressed: () {
-                                  // Add your onPressed logic here
+                                  context.go("/doctorHome/reviews");
+
                                 },
                                 style: ButtonStyle(
                                   shape: MaterialStateProperty.all<
@@ -303,7 +298,7 @@ class _DoctorHomeState extends State<DoctorHome> {
                                   Icons.view_list_rounded,
                                   color: myConstants.primaryColor,
                                 ),
-                                label: Text(
+                                label: const Text(
                                   'View Reviews',
                                   style: TextStyle(
                                       fontSize: 18.0, color: Colors.black54),

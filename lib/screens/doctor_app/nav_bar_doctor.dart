@@ -2,15 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/screens/doctor_app/doctor_profile_screen.dart';
-import 'package:medical_application/screens/doctor_app/my_appointments_screen.dart';
-import 'package:medical_application/screens/doctor_app/profile_screen.dart';
-import 'package:medical_application/screens/doctor_app/program.dart';
 
-import 'doctor_reviews_screen.dart';
+import '../../bloc/medical_bloc.dart';
 
 class NavBarDoctor extends StatelessWidget {
   const NavBarDoctor({super.key});
@@ -47,39 +44,30 @@ class NavBarDoctor extends StatelessWidget {
                 leading: const Icon(Icons.view_list_rounded),
                 title: const Text('Program'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DoctorProgramScreen(),
-                    ),
-                  );
+                  getIt<MedicalBloc>().add(
+                      FetchProgram(doctorId: authState.doctor!.id));
+                  GoRouter.of(context).go("/doctorHome/program");
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.notifications_active_outlined),
                 title: const Text('Appointments'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MyAppointmentsDoctor(),
-                    ),
+                  getIt<MedicalBloc>().add(
+                    FetchAppointmentsForDoctor(
+                        userId: authState.doctor!.id),
                   );
+                  GoRouter.of(context).go("/doctorHome/appointments");
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.reviews),
                 title: const Text('Reviews'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DoctorReviewsScreen(),
-                    ),
+                  getIt<MedicalBloc>().add(
+                    const FetchReviews(),
                   );
+                  GoRouter.of(context).go("/doctorHome/reviews");
                 },
               ),
               const Divider(),
@@ -87,38 +75,23 @@ class NavBarDoctor extends StatelessWidget {
                 leading: const Icon(Icons.medical_information),
                 title: const Text('My Doctor Details'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DoctorProfileScreen(),
-                    ),
-                  );
+                  GoRouter.of(context).go("/doctorHome/myDoctorDetails");
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.person),
                 title: const Text('My Profile'),
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileForDoctorScreen(),
-                    ),
-                  );
+                  GoRouter.of(context).go("/doctorHome/myProfile");
                 },
               ),
-              const ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('Settings'),
-              ),
+
               const Divider(),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+
                   FirebaseAuth.instance.signOut();
+                  GoRouter.of(context).go("/login");
                 },
                 child: const ListTile(
                   title: Text('Exit'),

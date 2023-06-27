@@ -9,6 +9,8 @@ import 'package:medical_application/models/user.dart';
 import 'package:medical_application/models/review.dart';
 import 'package:medical_application/repositories/rest/medical_repository.dart';
 
+import '../models/programDto.dart';
+
 var medicalRepository = MedicalRestRepository();
 
 Doctor? findDoctorById(List<Doctor> doctors, String doctorId) {
@@ -35,7 +37,13 @@ List<Review> findReviewsByDoctorId(List<Review> allReviews, String doctorId) {
   doctorReviews =
       allReviews.where((review) => review.doctorId == doctorId).toList();
 
+  List<Review> result= sortReviewsByDateTime(doctorReviews);
   return doctorReviews;
+}
+
+List<Review> sortReviewsByDateTime(List<Review> reviews) {
+  reviews.sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));
+  return reviews;
 }
 
 bool hasAppointmentConfirmedBefore(
@@ -101,30 +109,6 @@ List<AppointmentHours> sortProgram(List<AppointmentHours> hours) {
   return hours;
 }
 
-String extractDate(DateTime dateAndTime) {
-  String formattedDate = DateFormat("dd/MM/yyyy").format(dateAndTime);
-  return formattedDate;
-}
-
-List<AppointmentHours> getFreeSlots(List<Appointment> appointments,
-    DateTime date, Map<int, List<AppointmentHours>> program) {
-  List<AppointmentHours> slots = [];
-  int day = getDayNumber(DateFormat('EEEE').format(date));
-
-  if (program.containsKey(day)) {
-    var listApp = getAppByDate(appointments, date);
-    var listHours = sortProgram(program[day]!);
-    for (var hour in listHours) {
-      if (findHourInAppList(listApp, hour.startHour) == false) {
-        slots.add(hour);
-      }
-    }
-  } else {
-    return [];
-  }
-  return slots;
-}
-
 List<Appointment> getAppByDate(List<Appointment> appointments, DateTime date) {
   List<Appointment> listApp = [];
 
@@ -139,8 +123,10 @@ List<Appointment> getAppByDate(List<Appointment> appointments, DateTime date) {
 }
 
 bool findHourInAppList(List<Appointment> appointments, String startHour) {
+
   for (var app in appointments) {
-    if (DateFormat("hh:mm").format(app.dateAndTime) == startHour) {
+    if (DateFormat("HH:mm").format(app.dateAndTime) == startHour) {
+
       return true;
     }
   }
@@ -195,4 +181,94 @@ List<Appointment> todaysAppointments(List<Appointment> appointments) {
   }
 
   return todayApps;
+}
+
+bool isEmail(String input) {
+
+  const emailRegex = r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$';
+  final regex = RegExp(emailRegex);
+  return regex.hasMatch(input);
+}
+
+bool isNumberWithMaxTwoCharacters(String input) {
+  if (input.length > 2) {
+    return false;
+  }
+  try {
+    int.parse(input);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+void sortPrograms(List<Program> programs) {
+  List<String> dayOrder = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
+
+  programs.sort((a, b) {
+
+    int dayComparison = dayOrder.indexOf(a.day).compareTo(dayOrder.indexOf(b.day));
+    if (dayComparison != 0) {
+      return dayComparison;
+    }
+
+
+    int startHourComparison = a.startHour.compareTo(b.startHour);
+    if (startHourComparison != 0) {
+      return startHourComparison;
+    }
+
+
+    return a.endHour.compareTo(b.endHour);
+  });
+}
+
+bool validatePassword(String password) {
+  if (password.length < 8) {
+    return false;
+  }
+
+
+  bool hasDigit = password.contains(RegExp(r'\d'));
+  if (!hasDigit) {
+    return false;
+  }
+
+
+  bool hasSpecialChar = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+  if (!hasSpecialChar) {
+    return false;
+  }
+
+
+  bool hasUppercase = password.contains(RegExp(r'[A-Z]'));
+  if (!hasUppercase) {
+    return false;
+  }
+
+  bool hasLowercase = password.contains(RegExp(r'[a-z]'));
+  if (!hasLowercase) {
+    return false;
+  }
+
+  return true;
+}
+
+List<Doctor> getAvailableDoctors(List <Doctor> allDoc){
+  List<Doctor> availableDoc=[];
+  for(var d in allDoc){
+    if(d.available==true){
+      availableDoc.add(d);
+
+    }
+  }
+  return availableDoc;
 }

@@ -24,7 +24,7 @@ class _DoctorRatingsChartWidgetState extends State<DoctorRatingsChartWidget> {
     for (var doc in allDoc) {
       var rating = ratingByDoctor(doc.id, allReviews);
       ChartSampleData ratingData =
-          ChartSampleData(doc.firstName + ' ' + doc.lastName, rating);
+          ChartSampleData('${doc.firstName} ${doc.lastName}', rating);
       data.add(ratingData);
     }
     data.sort((a, b) => a.y.compareTo(b.y));
@@ -45,7 +45,7 @@ class _DoctorRatingsChartWidgetState extends State<DoctorRatingsChartWidget> {
     if (sum != 0.0) {
       rating = sum / nr;
     }
-    String inString = rating.toStringAsFixed(2); // '2.35'
+    String inString = rating.toStringAsFixed(2);
     double inDouble = double.parse(inString);
     return inDouble;
   }
@@ -90,9 +90,6 @@ class _DoctorRatingsChartWidgetState extends State<DoctorRatingsChartWidget> {
         borderRadius: BorderRadius.circular(15),
         trackColor: const Color.fromRGBO(247, 251, 254, 1),
         color: Colors.lightGreen.withOpacity(0.6),
-
-        /// If we enable this property as true,
-        /// then we can show the track of series.
         isTrackVisible: true,
         dataLabelSettings: const DataLabelSettings(
             isVisible: true, labelAlignment: ChartDataLabelAlignment.top),

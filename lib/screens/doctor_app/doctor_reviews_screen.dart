@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/review_box.dart';
@@ -20,7 +21,7 @@ class DoctorReviewsScreen extends StatefulWidget {
 class _DoctorReviewsScreenState extends State<DoctorReviewsScreen> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+
     Constants myConstants = Constants();
     List<Review> reviews = [];
     Map<int, int> starList = {};
@@ -62,7 +63,8 @@ class _DoctorReviewsScreenState extends State<DoctorReviewsScreen> {
                 centerTitle: true,
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.go("/doctorHome");
+
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -83,6 +85,13 @@ class _DoctorReviewsScreenState extends State<DoctorReviewsScreen> {
                   const SizedBox(
                     height: 32,
                   ),
+                  if (reviews.isEmpty)
+                    const Center(
+                        child: Text(
+                          'You have no reviews yet.',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),),
                   if (reviews.isNotEmpty)
                     Column(
                       children: [

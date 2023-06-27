@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -50,8 +49,6 @@ class _EditImageWidgetState extends State<EditImageWidget> {
   @override
   Widget build(BuildContext context) {
     defaultImageUrl=widget.doctor.imageUrl;
-
-    double width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -114,6 +111,6 @@ class _EditImageWidgetState extends State<EditImageWidget> {
         ),
       ],
     );
-    return const Placeholder();
+
   }
 }

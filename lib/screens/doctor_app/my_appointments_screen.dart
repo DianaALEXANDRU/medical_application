@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/components/doctor/appointment_box_doctor.dart';
@@ -49,8 +50,9 @@ class _MyAppointmentsDoctorState extends State<MyAppointmentsDoctor> {
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
-        upcomingAppointments = _runFilterUpcoming(medicalState.appointments);
-        pastAppointments = _runFilterPast(medicalState.appointments);
+        upcomingAppointments =
+            _runFilterUpcoming(medicalState.appointmentsByDoctor);
+        pastAppointments = _runFilterPast(medicalState.appointmentsByDoctor);
         return DefaultTabController(
           length: 2,
           child: Scaffold(
@@ -58,7 +60,7 @@ class _MyAppointmentsDoctorState extends State<MyAppointmentsDoctor> {
               backgroundColor: Colors.white,
               leading: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.go("/doctorHome");
                 },
                 icon: const Icon(
                   Icons.arrow_back,
@@ -92,45 +94,56 @@ class _MyAppointmentsDoctorState extends State<MyAppointmentsDoctor> {
                       height: 16,
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: upcomingAppointments.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) => Container(
-                          margin: const EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          child: Column(
-                            children: [
-                              if (index == 0 ||
-                                  (index > 0 &&
-                                      Utility.compareDates(
-                                              upcomingAppointments[index - 1]
-                                                  .dateAndTime,
-                                              upcomingAppointments[index]
-                                                  .dateAndTime) ==
-                                          false))
-                                Text(
-                                  '${DateFormat.EEEE().format(
-                                    upcomingAppointments[index].dateAndTime,
-                                  )} ${DateFormat('dd/MM/yyyy').format(
-                                    upcomingAppointments[index].dateAndTime,
-                                  )}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
+                      child: upcomingAppointments.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'You have no upcoming appointments.',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: upcomingAppointments.length,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) => Container(
+                                margin: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  bottom: 16,
                                 ),
-                              AppointmentBoxDoctor(
-                                  app: upcomingAppointments[index],
-                                  size: size,
-                                  disable: false,
-                                  confirme:
-                                      upcomingAppointments[index].confirmed),
-                            ],
-                          ),
-                        ),
-                      ),
+                                child: Column(
+                                  children: [
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            Utility.compareDates(
+                                                    upcomingAppointments[
+                                                            index - 1]
+                                                        .dateAndTime,
+                                                    upcomingAppointments[index]
+                                                        .dateAndTime) ==
+                                                false))
+                                      Text(
+                                        '${DateFormat.EEEE().format(
+                                          upcomingAppointments[index]
+                                              .dateAndTime,
+                                        )} ${DateFormat('dd/MM/yyyy').format(
+                                          upcomingAppointments[index]
+                                              .dateAndTime,
+                                        )}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    AppointmentBoxDoctor(
+                                        app: upcomingAppointments[index],
+                                        size: size,
+                                        disable: false,
+                                        confirme: upcomingAppointments[index]
+                                            .confirmed),
+                                  ],
+                                ),
+                              ),
+                            ),
                     ),
                   ],
                 ),
@@ -140,45 +153,53 @@ class _MyAppointmentsDoctorState extends State<MyAppointmentsDoctor> {
                       height: 16,
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: pastAppointments.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) => Container(
-                          margin: const EdgeInsets.only(
-                            left: 16,
-                            right: 16,
-                            bottom: 16,
-                          ),
-                          child: Column(
-                            children: [
-                              if (index == 0 ||
-                                  (index > 0 &&
-                                      Utility.compareDates(
-                                              pastAppointments[index - 1]
-                                                  .dateAndTime,
-                                              pastAppointments[index]
-                                                  .dateAndTime) ==
-                                          false))
-                                Text(
-                                  '${DateFormat.EEEE().format(
-                                    pastAppointments[index].dateAndTime,
-                                  )} ${DateFormat('dd/MM/yyyy').format(
-                                    pastAppointments[index].dateAndTime,
-                                  )}',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                  ),
+                      child: pastAppointments.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'You have no past appointments.',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: pastAppointments.length,
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) => Container(
+                                margin: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 16,
+                                  bottom: 16,
                                 ),
-                              AppointmentBoxDoctor(
-                                  app: pastAppointments[index],
-                                  size: size,
-                                  disable: true,
-                                  confirme:
-                                      upcomingAppointments[index].confirmed),
-                            ],
-                          ),
-                        ),
-                      ),
+                                child: Column(
+                                  children: [
+                                    if (index == 0 ||
+                                        (index > 0 &&
+                                            Utility.compareDates(
+                                                    pastAppointments[index - 1]
+                                                        .dateAndTime,
+                                                    pastAppointments[index]
+                                                        .dateAndTime) ==
+                                                false))
+                                      Text(
+                                        '${DateFormat.EEEE().format(
+                                          pastAppointments[index].dateAndTime,
+                                        )} ${DateFormat('dd/MM/yyyy').format(
+                                          pastAppointments[index].dateAndTime,
+                                        )}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    AppointmentBoxDoctor(
+                                        app: pastAppointments[index],
+                                        size: size,
+                                        disable: true,
+                                        confirme:
+                                            pastAppointments[index].confirmed),
+                                  ],
+                                ),
+                              ),
+                            ),
                     ),
                   ],
                 ),

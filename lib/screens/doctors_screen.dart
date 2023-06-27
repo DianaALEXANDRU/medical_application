@@ -6,7 +6,7 @@ import 'package:medical_application/components/doctor_box.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/screens/doctor_details_screen.dart';
+import 'package:medical_application/utill/helpers.dart';
 
 class DoctorScreen extends StatefulWidget {
   final String category;
@@ -29,18 +29,22 @@ class _DoctorScreenState extends State<DoctorScreen> {
     List<Doctor> results = [];
     if (widget.category != 'all') {
       allDoctors = allDoctors
-          .where((doctor) => doctor.category
-              .toLowerCase()
-              .contains(widget.category.toLowerCase()))
+          .where((doctor) =>
+              doctor.available == true &&
+              doctor.category
+                  .toLowerCase()
+                  .contains(widget.category.toLowerCase()))
           .toList();
     }
     if (_filter.isEmpty) {
-      results = allDoctors;
+      results = getAvailableDoctors(allDoctors);
     } else {
       results = allDoctors
-          .where((doctor) => ('${doctor.firstName} ${doctor.lastName}')
-              .toLowerCase()
-              .contains(_filter.toLowerCase()))
+          .where((doctor) =>
+              doctor.available == true &&
+              ('${doctor.firstName} ${doctor.lastName}')
+                  .toLowerCase()
+                  .contains(_filter.toLowerCase()))
           .toList();
     }
 
@@ -49,8 +53,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     List<Doctor> foundDoctors = [];
@@ -132,7 +134,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                           ),
                           child: InkWell(
                             onTap: () {
-                              // print("################################### ${GoRouter.of(context).location} ");
                               context.go(
                                   "${GoRouter.of(context).location}/doctorDetails/${foundDoctors[index].id}");
                             },

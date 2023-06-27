@@ -16,8 +16,9 @@ class AuthRepositoryFirestore extends AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+
+      await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
         email: email,
         password: password,
       )
@@ -37,15 +38,7 @@ class AuthRepositoryFirestore extends AuthRepository {
           );
         },
       );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
+
   }
 
   @override
@@ -53,55 +46,30 @@ class AuthRepositoryFirestore extends AuthRepository {
     required String email,
     required String password,
   }) async {
-    try {
+
 
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
   }
 
   @override
   Future<void> passwordReset({required String email}) async {
-    try {
 
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
 
-      // showDialog(context: context, builder: (context){
-      //   return const AlertDialog(
-      //     content: Text('Password  reset link sent!'),
-      //   );
-      // }); //TODO afisez mesaj in pagina
-
-    } on FirebaseAuthException catch (e) {
-      print(e);
-      // showDialog(context: context, builder: (context){
-      //   return AlertDialog(
-      //     content: Text(e.message.toString()),
-      //   );
-      // });  //TODO afisez mesaj in pagina
-    }
   }
 
   @override
   Future<void> logOut() async {
-
     FirebaseAuth.instance.signOut();
-
   }
 
   @override
   Future<UserClass?> fetchUser() async {
-
     final id = FirebaseAuth.instance.currentUser?.uid;
 
     DocumentReference documentReference =
@@ -114,8 +82,6 @@ class AuthRepositoryFirestore extends AuthRepository {
     }
     Map<String, dynamic> jsonData =
         documentSnapshot.data() as Map<String, dynamic>;
-
-
 
     jsonData['id'] = id;
 
@@ -145,6 +111,7 @@ class AuthRepositoryFirestore extends AuthRepository {
       'experience': doctorDetails.get('experience'),
       'image_url': doctorDetails.get('image_url'),
       'category': doctorDetails.get('category'),
+      'available': doctorDetails.get('available'),
     };
 
     DoctorEntity doctor = DoctorEntity.fromJson(combinedMap);

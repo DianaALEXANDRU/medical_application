@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/screens/web/doctor_profile_screen.dart';
 import 'package:medical_application/utill/helpers.dart';
 
 import 'components/custom_app_bar.dart';
@@ -72,7 +71,6 @@ class _DoctorContentScreenState extends State<DoctorContentScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const CustomAppbar(),
                 TextField(
                   onChanged: (value) {
                     setState(() {
@@ -174,51 +172,38 @@ class _DoctorContentScreenState extends State<DoctorContentScreen> {
                               columns: const [
                                 DataColumn(
                                     label: Text('No.'),
-                                    tooltip: 'represents if user is verified.'),
+                               ),
                                 DataColumn(
                                     label: Text('First Name'),
-                                    tooltip:
-                                        'represents first name of the user'),
+                                    ),
                                 DataColumn(
                                     label: Text('Last Name'),
-                                    tooltip:
-                                        'represents last name of the user'),
+                                   ),
                                 DataColumn(
                                     label: Text('Phone'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                ),
                                 DataColumn(
                                     label: Text('Category'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                 ),
+                                DataColumn(
+                                    label: Text('Availability'),
+                                   ),
                                 DataColumn(
                                     label: Text('View more'),
-                                    tooltip:
-                                        'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Edit'),
-                                    tooltip:
-                                        'represents phone number of the user'),
-                                DataColumn(
-                                    label: Text('Delete'),
-                                    tooltip:
-                                        'represents phone number of the user'),
+                                    ),
                               ],
                               source: dropdownValueCategory != null
                                   ? _DataSource(
                                       doctors: _runCategoryFilter(foundDoctors),
                                       onPressedNavigate: (doctorView) {
-                                        print(
-                                            '############### ON Pressed Navigate ');
+
                                         context.go(
                                             '/doctors/doctorDetails/${doctorView!.id}');
                                       })
                                   : _DataSource(
                                       doctors: foundDoctors,
                                       onPressedNavigate: (doctorView) {
-                                        print(
-                                            '############### ON Pressed Navigate ');
-                                        //context.go('/doctorDetails/$doctorView');
+
                                         context.go(
                                             '/doctors/doctorDetails/${doctorView!.id}');
                                       }),
@@ -274,23 +259,15 @@ class _DataSource extends DataTableSource {
           Text(data.category),
         ),
         DataCell(
+           data.available==true?  const Text('available'):const Text('not available') ,
+        ),
+        DataCell(
           IconButton(
             onPressed: () {
               onPressedNavigate.call(doctors[index]);
+              getIt<MedicalBloc>().add(FetchProgramList(doctorId: data.id));
             },
             icon: const Icon(Icons.arrow_forward, color: Colors.grey),
-          ),
-        ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit, color: Colors.green),
-          ),
-        ),
-        DataCell(
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.delete, color: Colors.red),
           ),
         ),
       ],

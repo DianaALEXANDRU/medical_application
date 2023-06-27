@@ -9,7 +9,6 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/models/doctor.dart';
 import 'package:medical_application/models/review.dart';
-import 'package:medical_application/screens/book_appointment_screen.dart';
 import 'package:medical_application/utill/helpers.dart';
 import 'package:medical_application/utill/utillity.dart';
 import 'package:rating_dialog/rating_dialog.dart';
@@ -38,12 +37,11 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
       description: '',
       experience: '',
       imageUrl: '',
-      category: '');
+      category: '',
+      available: true);
 
   @override
   Widget build(BuildContext context) {
-    print(
-        "################################### ${GoRouter.of(context).location} ");
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
     List<Review> reviews = [];
@@ -71,7 +69,6 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
             star3 = starList[3];
             star4 = starList[4];
             star5 = starList[5];
-            //TODO modifica fara ? !
             total = (star1! + star2! + star3! + star4! + star5!);
             sum =
                 (star1! * 1 + star2! * 2 + star3! * 3 + star4! * 4 + star5! * 5)
@@ -271,15 +268,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                               ),
                               child: InkWell(
                                 onTap: () {
-                                  //verifica daca merge asa adica sa ia tpate app doctorului respectiv si abia dupa sa treaca la pagina urmatoare
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookAppointmentScreen(doctor: doctor),
-                                    ),
-                                  );
+                                  context.go(
+                                      '${GoRouter.of(context).location}/bookAppointment');
                                 },
                                 child: Ink(
                                   decoration: BoxDecoration(
@@ -350,13 +340,12 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                                               'Write something about your experience',
                                           onSubmitted: (response) {
                                             if (authState.user?.id != null) {
-                                              addReview(
-                                                  response.rating.toInt(),
-                                                  response.comment,
-                                                  doctor.id,
-                                                  authState.user!.id);
                                               getIt<MedicalBloc>().add(
-                                                  const FetchReviews()); //TODO verifica
+                                                  AddReview(
+                                                      stars: response.rating.toInt(),
+                                                      comment: response.comment,
+                                                      doctorId: doctor.id,
+                                                      userId:authState.user!.id ));
                                             }
                                           },
                                         );

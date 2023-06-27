@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/constants.dart';
@@ -43,7 +44,7 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
               centerTitle: true,
               leading: IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  context.go("/doctorHome");
                 },
                 icon: const Icon(
                   Icons.arrow_back,

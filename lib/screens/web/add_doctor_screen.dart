@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:medical_application/screens/web/responsive_widget.dart';
@@ -22,12 +21,11 @@ class _AddDoctorScreenState extends State<AddDoctorScreen> {
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (ResponsiveWidget.isLargeScreen(context))
-              const Expanded(
+          children: const [
+              Expanded(
                 child: DrawerMenu(),
               ),
-            const Expanded(
+            Expanded(
               flex: 5,
               child: AddDoctorContentScreen(),
             )

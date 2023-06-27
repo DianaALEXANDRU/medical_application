@@ -21,12 +21,11 @@ class _DoctorsScreenState extends State<DoctorsScreen> {
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (ResponsiveWidget.isLargeScreen(context))
-              const Expanded(
+          children: const [
+              Expanded(
                 child: DrawerMenu(),
               ),
-            const Expanded(
+            Expanded(
               flex: 5,
               child: DoctorContentScreen(),
             )

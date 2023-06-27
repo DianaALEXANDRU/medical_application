@@ -21,7 +21,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
       'https://firebasestorage.googleapis.com/v0/b/fluttermedicalapp-ab48a.appspot.com/o/CATEGORY%2Fdefault_category.png?alt=media&token=69d75b49-e6c5-4e83-96c1-1bf3003f9560';
   String selctFile = '';
   late XFile file;
-  late Uint8List? selectedImageInBytes;
+  Uint8List? selectedImageInBytes;
   List<Uint8List> pickedImagesInBytes = [];
   List<String> imageUrls = [];
 
@@ -35,11 +35,17 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
 
       selectedImageInBytes = fileResult.files.first.bytes;
     }
-    print(selctFile);
+
   }
 
   final nameController = TextEditingController();
-
+  var errorMessageForNameField='';
+  bool isValid(){
+    if(nameController.text.trim().length>=3 && nameController.text.trim().length<=25){
+      return true;
+    }
+    return false;
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -102,6 +108,19 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
             ),
           ),
         ),
+        Column(
+          children: [
+            const SizedBox(height: 8,),
+            Text(
+              errorMessageForNameField,
+              style: const TextStyle(
+                fontSize: 12.0,
+                color: Colors.redAccent,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
         Padding(
           padding: const EdgeInsets.only(
             left: 8.0,
@@ -162,18 +181,26 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
           children: [
             ElevatedButton(
               onPressed: () {
-                getIt<MedicalBloc>().add(
-                  AddCategory(
-                    name: nameController.text.trim(),
-                    selctFile: selctFile,
-                    selectedImageInBytes: selectedImageInBytes,
-                  ),
-                );
+                if(isValid()){
+                  getIt<MedicalBloc>().add(
+                    AddCategory(
+                      name: nameController.text.trim(),
+                      selctFile: selctFile,
+                      selectedImageInBytes: selectedImageInBytes,
+                    ),
+                  );
+                }else{
+                  setState(() {
+                    errorMessageForNameField='The entered name must contain between 3 and 25 characters!';
+                  });
+                }
+
               },
               child: const Text(
                 'Add Category',
               ),
             ),
+
             const SizedBox(
               width: 8,
             ),

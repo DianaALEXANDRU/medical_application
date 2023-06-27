@@ -14,6 +14,7 @@ class Doctor extends Equatable {
   final String experience;
   final String imageUrl;
   final String category;
+  final bool available;
 
   const Doctor({
     required this.id,
@@ -26,6 +27,7 @@ class Doctor extends Equatable {
     required this.experience,
     required this.imageUrl,
     required this.category,
+    required this.available,
   });
 
   static Doctor fromEntity(DoctorEntity entity) => Doctor(
@@ -39,6 +41,7 @@ class Doctor extends Equatable {
         experience: entity.experience,
         imageUrl: entity.imageUrl,
         category: entity.category,
+        available: entity.available,
       );
 
   DoctorEntity toEntity() => DoctorEntity(
@@ -52,6 +55,7 @@ class Doctor extends Equatable {
         experience: experience,
         imageUrl: imageUrl,
         category: category,
+        available: available,
       );
 
   @override
@@ -69,5 +73,6 @@ class Doctor extends Equatable {
         experience,
         imageUrl,
         category,
+        available,
       ];
 }

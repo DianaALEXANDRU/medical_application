@@ -7,7 +7,6 @@ import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/screens/web/components/radial_painter.dart';
 import 'package:medical_application/utill/helpers.dart';
 
-import '../../../models/constants.dart';
 
 class TodaysCompletedAppointmentsWidget extends StatelessWidget {
   const TodaysCompletedAppointmentsWidget({Key? key}) : super(key: key);
@@ -44,7 +43,7 @@ class TodaysCompletedAppointmentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Constants myConstants = Constants();
+
     List<Appointment> todaysApps = [];
     double confirmedApp = 0.0;
     double appProcentage = 0.0;
@@ -104,7 +103,7 @@ class TodaysCompletedAppointmentsWidget extends StatelessWidget {
                             ),
                           if (todaysApps.isNotEmpty)
                             Text(
-                              '${confirmedApp}/${todaysAppointments(medicalState.appointments).length}',
+                              '$confirmedApp/${todaysAppointments(medicalState.appointments).length}',
                               style: const TextStyle(
                                 color: Colors.black54,
                                 fontSize: 16,
@@ -132,12 +131,12 @@ class TodaysCompletedAppointmentsWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.circle,
                             color: Colors.lightBlue,
                             size: 10,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 16 / 2,
                           ),
                           Text(
@@ -156,10 +155,10 @@ class TodaysCompletedAppointmentsWidget extends StatelessWidget {
                             color: Colors.green.withOpacity(0.2),
                             size: 10,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 24 / 2,
                           ),
-                          Text(
+                          const Text(
                             'Uncompleted',
                             style: TextStyle(
                               color: Colors.black54,

@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:medical_application/models/constants.dart';
 import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/screens/doctor_details_screen.dart';
 
 class DoctorWidget extends StatelessWidget {
   final Size size;

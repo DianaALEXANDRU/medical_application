@@ -5,7 +5,7 @@ import 'package:medical_application/models/review.dart';
 abstract class Utility {
   //TODO sterg clasa si static
   static DateTime combineDateAndTime(String date, String time) {
-    DateTime dateAndTime = DateFormat("dd/MM/yyyy hh:mm").parse('$date $time');
+    DateTime dateAndTime = DateFormat("dd/MM/yyyy HH:mm").parse('$date $time');
     return dateAndTime;
   }
 
@@ -34,23 +34,7 @@ abstract class Utility {
     return stars;
   }
 
-  static double? rating(List<Review> allReviews) {
-    double media = 0.0;
-    Map<int, int> starList = createStarsList(allReviews);
 
-    var star1 = starList[1];
-    var star2 = starList[2];
-    var star3 = starList[3];
-    var star4 = starList[4];
-    var star5 = starList[5];
-
-    var total = (star1! + star2! + star3! + star4! + star5!);
-    var sum =
-        (star1 * 1 + star2 * 2 + star3 * 3 + star4 * 4 + star5 * 5).toDouble();
-    media = sum.toDouble() / total;
-
-    return media;
-  }
 
   static void sortListByDateTime(List<Appointment> list) {
     list.sort((a, b) => a.dateAndTime.compareTo(b.dateAndTime));

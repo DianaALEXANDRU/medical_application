@@ -21,12 +21,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (ResponsiveWidget.isLargeScreen(context))
-              const Expanded(
-                child: DrawerMenu(),
-              ),
-            const Expanded(
+          children: const [
+            Expanded(
+              child: DrawerMenu(),
+            ),
+            Expanded(
               flex: 5,
               child: DashboardContnet(),
             )

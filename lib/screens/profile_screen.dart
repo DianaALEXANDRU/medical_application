@@ -14,109 +14,112 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool edit = false;
-  bool editFirstNameVar = false;
-  String firstName = '';
-  bool editLastNameVar = false;
-  String lastName = '';
-  bool editPhoneNoVar = false;
-  String phoneNo = '';
+
+  var editDetailsMode = false;
+
+  var errorMessageForLastName = '';
+  var errorMessageForFirstName = '';
+  var errorMessageForPhoneNo = '';
+
+  var firstNameController = TextEditingController();
+  var lastNameController = TextEditingController();
+  var phoneNoController = TextEditingController();
+
+  var firstNameIntermediarController = TextEditingController();
+  var lastNameIntermediarController = TextEditingController();
+  var phoneNoIntermediarController = TextEditingController();
+
+
+  var firstName='';
+  var lastName='';
+  var phoneNo='';
+
+  bool isValid() {
+    bool isValid = true;
+
+    if (firstNameIntermediarController.text.trim().length < 2 ||
+        firstNameIntermediarController.text.trim().length > 30) {
+
+      setState((){
+        errorMessageForFirstName =
+        'First Name must be between 2 and 30 characters!';
+      });
+
+      isValid= false;
+
+    }
+
+    if (lastNameIntermediarController.text.trim().length < 2 ||
+        lastNameIntermediarController.text.trim().length > 30) {
+      setState((){
+        errorMessageForLastName =
+        'Last Name must be between 2 and 30 characters!';
+      });
+
+      isValid= false;
+
+    }
+
+    if (phoneNoIntermediarController.text.trim().length < 8 ||
+        phoneNoIntermediarController.text.trim().length > 30) {
+      setState((){
+        errorMessageForPhoneNo = 'Phone No must be between 8 and 30 characters!';
+      });
+
+      isValid= false;
+
+    }
+
+    return isValid;
+  }
+
+  void resetErrorMessages(){
+    setState(() {
+      errorMessageForLastName = '';
+      errorMessageForFirstName = '';
+      errorMessageForPhoneNo = '';
+
+    });
+  }
 
   @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneNoController.dispose();
+    firstNameIntermediarController.dispose();
+    lastNameIntermediarController.dispose();
+    phoneNoIntermediarController.dispose();
+
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    print(
-        "################################### ${GoRouter.of(context).location} ");
+
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
 
-    void editFirstName(String fName) {
-      setState(() {
-        if (editFirstNameVar == false) {
-          editFirstNameVar = true;
-          firstName = fName;
-        }
-      });
-    }
 
-    void resetFirstNameState() {
-      setState(() {
-        if (editFirstNameVar == true) {
-          editFirstNameVar = false;
-        }
-      });
-    }
 
-    void editLastName(String lName) {
-      setState(() {
-        if (editLastNameVar == false) {
-          editLastNameVar = true;
-          lastName = lName;
-        }
-      });
-    }
-
-    void resetLastNameState() {
-      setState(() {
-        if (editLastNameVar == true) {
-          editLastNameVar = false;
-        }
-      });
-    }
-
-    void editPhoneNo(String pNo) {
-      setState(() {
-        if (editPhoneNoVar == false) {
-          editPhoneNoVar = true;
-          phoneNo = pNo;
-        }
-      });
-    }
-
-    void resetPhoneNoState() {
-      setState(() {
-        if (editPhoneNoVar == true) {
-          editPhoneNoVar = false;
-        }
-      });
-    }
-
-    void editMode() {
-      setState(() {
-        if (edit == false) {
-          edit = true;
-        } else {
-          edit = false;
-        }
-      });
-    }
-
-    var firstNameController = TextEditingController();
-    var lastNameController = TextEditingController();
-    var phoneNoController = TextEditingController();
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: getIt<AuthBloc>(),
       builder: (context, authState) {
-        if (editFirstNameVar == false) {
+
           firstNameController =
               TextEditingController(text: authState.user!.firstName);
-        } else {
-          firstNameController = TextEditingController(text: firstName);
-        }
-
-        if (editLastNameVar == false) {
           lastNameController =
               TextEditingController(text: authState.user!.lastName);
-        } else {
-          lastNameController = TextEditingController(text: lastName);
-        }
-
-        if (editPhoneNoVar == false) {
           phoneNoController =
               TextEditingController(text: authState.user!.phoneNo);
-        } else {
-          phoneNoController = TextEditingController(text: phoneNo);
-        }
+
+          firstNameIntermediarController =
+              TextEditingController(text: firstName);
+          lastNameIntermediarController =
+              TextEditingController(text: lastName);
+          phoneNoIntermediarController =
+              TextEditingController(text: phoneNo);
+
 
         return Scaffold(
           resizeToAvoidBottomInset: true,
@@ -138,7 +141,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             actions: [
               IconButton(
                 onPressed: () {
-                  editMode();
+                  setState(() {
+                    if(editDetailsMode==false){
+                      editDetailsMode = true;
+                    }else{
+                      editDetailsMode = false;
+                      resetErrorMessages();
+                    }
+                    firstName= authState.user!.firstName;
+                    lastName=authState.user!.lastName;
+                    phoneNo= authState.user!.phoneNo;
+                  });
                 },
                 icon: const Icon(
                   Icons.edit,
@@ -185,7 +198,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(
                         height: 40,
                       ),
-                      if (edit)
+                      if (editDetailsMode==true)
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -227,19 +240,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             // child:
                             child: TextField(
-                              enabled: edit,
-                              controller: firstNameController,
+                              enabled:  editDetailsMode ? true : false,
+                              controller: editDetailsMode ? firstNameIntermediarController : firstNameController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                hintText: 'Enter a search term',
+                                hintText: 'Enter your first name',
                               ),
-                              onEditingComplete: () {
-                                editFirstName(firstNameController.text);
-                              },
+
                             ),
                           ),
                         ],
                       ),
+                      if(errorMessageForFirstName!='')
+                        Column(
+                          children: [
+                            Text(
+                              errorMessageForFirstName,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -264,19 +288,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             // child:
                             child: TextField(
-                              enabled: edit,
-                              controller: lastNameController,
+                              enabled:  editDetailsMode ? true : false,
+                              controller:editDetailsMode ? lastNameIntermediarController: lastNameController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                hintText: 'Enter the details',
+                                hintText: 'Enter your last name',
                               ),
-                              onEditingComplete: () {
-                                editLastName(lastNameController.text);
-                              },
+
                             ),
                           ),
                         ],
                       ),
+                      if(errorMessageForLastName!='')
+                        Column(
+                          children: [
+                            Text(
+                              errorMessageForLastName,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -301,38 +336,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             // child:
                             child: TextField(
-                              enabled: edit,
-                              controller: phoneNoController,
+                              enabled:  editDetailsMode ? true : false,
+                              controller: editDetailsMode ? phoneNoIntermediarController: phoneNoController,
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                hintText: 'Enter a search term',
+                                hintText: 'Enter your phone number',
                               ),
-                              onEditingComplete: () {
-                                editPhoneNo(phoneNoController.text);
-                              },
                             ),
                           ),
                         ],
                       ),
+                      if(errorMessageForPhoneNo!='')
+                        Column(
+                          children: [
+                            Text(
+                              errorMessageForPhoneNo,
+                              style: const TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(
                         height: 40,
                       ),
-                      if (edit == true)
+                      if (editDetailsMode == true)
                         InkWell(
                           onTap: () {
-                            getIt<MedicalBloc>().add(
-                              EditUserDetails(
-                                userId: authState.user!.id,
-                                firstName: firstName,
-                                lastName: lastName,
-                                phoneNo: phoneNo,
-                              ),
-                            );
-                            getIt<AuthBloc>().add(const FetchUser());
-                            editMode();
-                            resetFirstNameState();
-                            resetLastNameState();
-                            resetPhoneNoState();
+                            setState(() {
+                              firstName= firstNameIntermediarController.text.trim();
+                              lastName= lastNameIntermediarController.text.trim();
+                              phoneNo= phoneNoIntermediarController.text.trim();
+                            });
+                            if(isValid()){
+                              getIt<MedicalBloc>().add(
+                                EditUserDetails(
+                                  userId: authState.user!.id,
+                                  firstName: firstNameIntermediarController.text.trim(),
+                                  lastName: lastNameIntermediarController.text.trim(),
+                                  phoneNo: phoneNoIntermediarController.text.trim(),
+                                ),
+                              );
+                              getIt<AuthBloc>().add(const FetchUser());
+                              setState(() {
+                                editDetailsMode = false;
+                              });
+                              resetErrorMessages();
+                            }
+
                           },
                           child: Ink(
                             decoration: BoxDecoration(

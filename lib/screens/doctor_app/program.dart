@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
@@ -34,7 +35,7 @@ class _DoctorProgramScreenState extends State<DoctorProgramScreen> {
                 centerTitle: true,
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.go("/doctorHome");
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -69,7 +70,13 @@ class _DoctorProgramScreenState extends State<DoctorProgramScreen> {
                   ),
                 ),
               ),
-              body: ListView.builder(
+              body:medicalState.programDays.isEmpty? const Center(
+                child: Text(
+                  'You have an empty program.',
+                  style: TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ): ListView.builder(
                 itemCount: medicalState.programDays.length,
                 itemBuilder: (BuildContext context, int index) {
                   final programDay = medicalState.programDays[index];

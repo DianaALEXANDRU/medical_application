@@ -13,6 +13,7 @@ class DoctorEntity extends Equatable {
   static const String fieldExperience = 'experience';
   static const String fieldImageUrl = 'image_url';
   static const String fieldCategory = 'category';
+  static const String fieldAvailable='available';
 
   final String id;
   final String firstName;
@@ -24,6 +25,7 @@ class DoctorEntity extends Equatable {
   final String experience;
   final String imageUrl;
   final String category;
+  final bool available;
 
   const DoctorEntity({
     required this.id,
@@ -36,6 +38,7 @@ class DoctorEntity extends Equatable {
     required this.experience,
     required this.imageUrl,
     required this.category,
+    required this.available,
   });
 
   static DoctorEntity fromJson(Map<String, dynamic> json) => DoctorEntity(
@@ -49,6 +52,7 @@ class DoctorEntity extends Equatable {
         experience: json[fieldExperience],
         imageUrl: json[fieldImageUrl] ?? '',
         category: json[fieldCategory] ?? '',
+        available:json[fieldAvailable]?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -62,6 +66,7 @@ class DoctorEntity extends Equatable {
         fieldExperience: experience,
         fieldImageUrl: imageUrl,
         fieldCategory: category,
+        fieldAvailable: available,
       };
 
   @override
@@ -76,5 +81,6 @@ class DoctorEntity extends Equatable {
         experience,
         imageUrl,
         category,
+        available,
       ];
 }

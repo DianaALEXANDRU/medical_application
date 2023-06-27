@@ -77,7 +77,6 @@ class _AppByCategoryChartWidgetState extends State<AppByCategoryChartWidget> {
       builder: (context, medicalState) {
         data = getData(medicalState.categories, medicalState.doctors,
             medicalState.appointments);
-        print("######### $data");
 
         if (data.isNotEmpty) {
           var maxValue = data.map((e) => e.y).reduce(max) as double?;

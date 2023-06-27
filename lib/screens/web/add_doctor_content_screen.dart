@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
@@ -12,7 +13,7 @@ import 'package:medical_application/models/programDto.dart';
 import 'package:medical_application/models/user.dart';
 import 'package:medical_application/screens/web/time_piker.dart';
 
-import 'components/custom_app_bar.dart';
+import '../../utill/helpers.dart';
 
 class AddDoctorContentScreen extends StatefulWidget {
   const AddDoctorContentScreen({Key? key}) : super(key: key);
@@ -25,11 +26,22 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
   int currentStep = 0;
 
   continueStep() {
-    if (currentStep < 2) {
+    if (isValidStep1() == true && currentStep == 0) {
       setState(() {
         currentStep = currentStep + 1;
       });
+    } else {
+      if (currentStep == 1 && isValidStep2() == true) {
+        setState(() {
+          currentStep = currentStep + 1;
+        });
+      } else {
+        // setState(() {
+        //   currentStep = currentStep + 1;
+        // });
+      }
     }
+
     if (currentStep == 2) {
       addDoctor = true;
     }
@@ -42,6 +54,11 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
       setState(() {
         currentStep = currentStep - 1;
       });
+    }else{
+      if(currentStep==0){
+        GoRouter.of(context).pop("/addDoctor");
+
+      }
     }
   }
 
@@ -139,7 +156,7 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
       'https://firebasestorage.googleapis.com/v0/b/fluttermedicalapp-ab48a.appspot.com/o/CATEGORY%2Fdefault_category.png?alt=media&token=69d75b49-e6c5-4e83-96c1-1bf3003f9560';
   String selctFile = '';
   late XFile file;
-  late Uint8List? selectedImageInBytes;
+  Uint8List? selectedImageInBytes;
   List<Uint8List> pickedImagesInBytes = [];
   List<String> imageUrls = [];
   int imageCounts = 0;
@@ -154,7 +171,7 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
 
       selectedImageInBytes = fileResult.files.first.bytes;
     }
-    print(selctFile);
+
   }
 
   @override
@@ -209,6 +226,117 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
   final exeperienceController = TextEditingController();
   final descriptionController = TextEditingController();
 
+  var errorMessageSelectedUser = '';
+  var errorMessageExperience = '';
+  var errorMessageCategory = '';
+  var errorMessageDescription = '';
+  var errorMessageProgram='';
+  var isValid=true;
+
+  bool isValidStep2() {
+    bool isValid = true;
+
+    if (dropdownValueCategory == null) {
+      setState(() {
+        errorMessageCategory = 'You should select a category';
+      });
+
+      isValid = false;
+    }
+
+    if (isNumberWithMaxTwoCharacters(exeperienceController.text.trim()) ==
+        false) {
+      setState(() {
+        errorMessageExperience = 'It must be a number with max 2 characters!';
+      });
+
+      isValid = false;
+    }
+    if (descriptionController.text.trim().isEmpty ||
+        descriptionController.text.trim().length > 500) {
+      setState(() {
+        errorMessageDescription =
+            'You must enter a description with max. 500 characters!';
+      });
+
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  bool isValidStep1() {
+    bool isValid = true;
+
+    if (selectedUser.id == '') {
+      setState(() {
+        errorMessageSelectedUser = '  You must select an user first!';
+      });
+
+      isValid = false;
+    }
+
+
+    return isValid;
+  }
+
+  void resetErrorMessages(){
+    setState(() {
+       errorMessageSelectedUser = '';
+       errorMessageExperience = '';
+       errorMessageCategory = '';
+       errorMessageDescription = '';
+       errorMessageProgram='';
+    });
+  }
+
+  bool isValidProgram(List<Program> allProgram, Program currentProgram) {
+    bool isValid = true;
+    if(currentProgram.startHour.compareTo(currentProgram.endHour)==1){
+      setState(() {
+        errorMessageProgram='This can`t be added! The hours are not chosen correctly! ';
+      });
+      isValid=false;
+    }
+    for (var pr in allProgram) {
+      if (pr.day == currentProgram.day &&
+          pr.endHour == currentProgram.endHour &&
+          pr.startHour == currentProgram.startHour) {
+        setState(() {
+          errorMessageProgram='This already exists!';
+        });
+        isValid=false;
+      }else{
+        if(currentProgram.startHour.compareTo(pr.startHour)==1 && currentProgram.startHour.compareTo(pr.endHour)==-1 && currentProgram.day==pr.day ){
+
+          setState(() {
+            errorMessageProgram='This can`t be added! It interferes with another program! ';
+          });
+          isValid=false;
+        }else{
+          if(currentProgram.endHour.compareTo(pr.startHour)==1 && currentProgram.endHour.compareTo(pr.endHour)==-1 && currentProgram.day==pr.day ){
+
+            setState(() {
+              errorMessageProgram='This can`t be added! It interferes with another program! ';
+            });
+            isValid=false;
+          }
+        }
+      }
+    }
+
+    return isValid;
+  }
+
+
+
+  @override
+  void dispose() {
+    exeperienceController.dispose();
+    descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -217,8 +345,8 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
       builder: (context, medicalState) {
         var foundUsers = _runFilter(medicalState.users);
 
-        return Scaffold(
-          body: Stepper(
+        return SafeArea(
+          child: Stepper(
             elevation: 0,
             controlsBuilder: controlBuilders,
             type: StepperType.horizontal,
@@ -234,7 +362,6 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     children: [
-                      const CustomAppbar(),
                       TextField(
                         onChanged: (value) {
                           setState(() {
@@ -269,7 +396,8 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.75,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.75,
                                 child: SingleChildScrollView(
                                   child: PaginatedDataTable(
                                     header: Row(
@@ -335,12 +463,22 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                           ),
                         ],
                       ),
+                      if (errorMessageSelectedUser != '')
+                        Text(
+                          errorMessageSelectedUser,
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                     ],
                   ),
                 ),
                 isActive: currentStep >= 0,
-                state:
-                    currentStep >= 0 ? StepState.complete : StepState.disabled,
+                state: currentStep >= 0
+                    ? StepState.complete
+                    : StepState.disabled,
               ),
               Step(
                 title: const Text(
@@ -397,12 +535,29 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                               hintText: ' Enter your years of experience',
                               hintStyle: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: const Color(0xff252B5C).withOpacity(0.5),
+                                color:
+                                    const Color(0xff252B5C).withOpacity(0.5),
                                 fontSize: 16.0,
                               ),
                             ),
                           ),
                         ),
+                        if (errorMessageExperience != '')
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                errorMessageExperience,
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(height: 30),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
@@ -443,7 +598,8 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                               ' Choose a Category',
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: const Color(0xff252B5C).withOpacity(0.5),
+                                color:
+                                    const Color(0xff252B5C).withOpacity(0.5),
                                 fontSize: 16.0,
                               ),
                             ),
@@ -460,6 +616,22 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                             }).toList(),
                           ),
                         ),
+                        if (errorMessageCategory != '')
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                errorMessageCategory,
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(
                           height: 30,
                         ),
@@ -502,16 +674,34 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                             maxLines: 10,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              contentPadding: const EdgeInsets.only(top: 16.0),
+                              contentPadding:
+                                  const EdgeInsets.only(top: 16.0),
                               hintText: ' Enter a short description',
                               hintStyle: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: const Color(0xff252B5C).withOpacity(0.5),
+                                color:
+                                    const Color(0xff252B5C).withOpacity(0.5),
                                 fontSize: 16.0,
                               ),
                             ),
                           ),
                         ),
+                        if (errorMessageDescription != '')
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                errorMessageDescription,
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(
                           height: 30.0,
                         ),
@@ -582,8 +772,9 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                   ],
                 ),
                 isActive: currentStep >= 0,
-                state:
-                    currentStep >= 1 ? StepState.complete : StepState.disabled,
+                state: currentStep >= 1
+                    ? StepState.complete
+                    : StepState.disabled,
               ),
               Step(
                 title: const Text(
@@ -635,7 +826,8 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                               ' Choose a day',
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: const Color(0xff252B5C).withOpacity(0.5),
+                                color:
+                                    const Color(0xff252B5C).withOpacity(0.5),
                                 fontSize: 16.0,
                               ),
                             ),
@@ -742,17 +934,38 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                                   startHour: start,
                                   endHour: end);
 
-                              bool programExists = program.contains(p);
+                            //  bool programExists = program.contains(p);
 
-                              if (programExists == false) {
+                              if (isValidProgram(program,p) == true) {
                                 setState(() {
                                   program.add(p);
                                 });
+                                resetErrorMessages();
                               }
+                            }else{
+                              setState(() {
+                                errorMessageProgram='You must complete all fields!';
+                              });
                             }
                           },
                           child: const Text('Add program'),
                         ),
+                        if(errorMessageProgram!='')
+                          Column(
+                            children: [
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                errorMessageProgram,
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(height: 30.0),
                       ],
                     ),
@@ -812,7 +1025,8 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                                   setState(
                                     () {
                                       _rowsPerPage = value ??
-                                          PaginatedDataTable.defaultRowsPerPage;
+                                          PaginatedDataTable
+                                              .defaultRowsPerPage;
                                     },
                                   );
                                 },
@@ -825,8 +1039,9 @@ class _AddDoctorContentScreenState extends State<AddDoctorContentScreen> {
                   ],
                 ),
                 isActive: currentStep >= 0,
-                state:
-                    currentStep >= 2 ? StepState.complete : StepState.disabled,
+                state: currentStep >= 2
+                    ? StepState.complete
+                    : StepState.disabled,
               ),
             ],
           ),

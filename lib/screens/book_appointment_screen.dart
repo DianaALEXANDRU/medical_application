@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/auth/auth_bloc.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
@@ -7,17 +8,14 @@ import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
 import 'package:medical_application/models/appointment_hours.dart';
 import 'package:medical_application/models/constants.dart';
-import 'package:medical_application/models/doctor.dart';
-import 'package:medical_application/screens/confirm_appointment_screen.dart';
-import 'package:medical_application/utill/helpers.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookAppointmentScreen extends StatefulWidget {
-  final Doctor doctor;
+  final String doctorId;
 
   const BookAppointmentScreen({
     Key? key,
-    required this.doctor,
+    required this.doctorId,
   }) : super(key: key);
 
   @override
@@ -33,37 +31,22 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     Constants myConstants = Constants();
-    List<Appointment> appointments = [];
+
     List<AppointmentHours> freeSlots = [];
-    List<int> programDays = [];
+
 
     getIt<MedicalBloc>().add(
       FetchProgramDays(
-        doctorId: widget.doctor.id,
+        doctorId: widget.doctorId,
       ),
     );
     getIt<MedicalBloc>().add(
       FetchFreeHours(
-        doctorId: widget.doctor.id,
+        doctorId: widget.doctorId,
         date: _selectedDay,
       ),
     );
 
-    void findNextDay(List<int> programDays) async {
-      //var programDays=getIt<MedicalBloc>().state.programDays;
-      var nextDay = _selectedDay;
-      while (isDayInProgram(programDays, nextDay) == false) {
-        nextDay = _selectedDay.add(const Duration(days: 1));
-      }
-
-      setState(() {
-        _selectedDay = nextDay;
-      });
-    }
-
-    void setProgramDays(List<int> pDays) {
-      programDays = pDays;
-    }
 
     return BlocBuilder<AuthBloc, AuthState>(
       bloc: getIt<AuthBloc>(),
@@ -71,11 +54,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
         return BlocBuilder<MedicalBloc, MedicalState>(
           bloc: getIt<MedicalBloc>(),
           builder: (context, medicalState) {
-            //appointments= medicalState.appointmentsByDoctor;
-            //print("/////////////////////APP : ${appointments.length}");
-            DateTime date = DateTime.now();
             freeSlots = medicalState.freeHours;
-            //setProgramDays(medicalState.programDays);
             return Scaffold(
               backgroundColor: Colors.white,
               appBar: AppBar(
@@ -84,7 +63,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                 centerTitle: true,
                 leading: IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    context.pop("/bookAppointment");
                   },
                   icon: const Icon(
                     Icons.arrow_back,
@@ -183,18 +162,31 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                               trailing: IconButton(
                                 icon: const Icon(Icons.arrow_forward),
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ConfirmAppointmentScreen(
-                                        patientId: authState.user!.id,
-                                        doctor: widget.doctor,
-                                        date: _selectedDay,
-                                        hour: freeSlots[index].startHour,
-                                      ),
+                                  String date = DateFormat("dd/MM/yyyy")
+                                      .format(_selectedDay);
+                                  String hour = freeSlots[index].startHour;
+                                  String dateAndTime = '$date $hour';
+                                  DateTime dateTime =
+                                      DateFormat("dd/MM/yyyy HH:mm")
+                                          .parse(dateAndTime);
+
+                                  Appointment app = Appointment(
+                                    id: '0',
+                                    patientId: authState.user!.id,
+                                    doctorId: widget.doctorId,
+                                    dateAndTime: dateTime,
+                                    confirmed: false,
+                                  );
+                                  context.go(
+                                      '${GoRouter.of(context).location}/confirmAppointment',
+                                      extra: app);
+                                  getIt<MedicalBloc>().add(
+                                    FetchFreeHours(
+                                      doctorId: widget.doctorId,
+                                      date: _selectedDay,
                                     ),
                                   );
+
                                 },
                               ),
                             ),
@@ -227,40 +219,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                           const SizedBox(
                             height: 16,
                           ),
-                          SizedBox(
-                            width: size.width,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                left: 20,
-                                right: 20,
-                              ),
-                              child: InkWell(
-                                onTap: () {
-                                  //verifica daca merge asa adica sa ia tpate app doctorului respectiv si abia dupa sa treaca la pagina urmatoare
-                                  // findNextDay(programDays);
-                                },
-                                child: Ink(
-                                  decoration: BoxDecoration(
-                                    color: myConstants.primaryColor,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
-                                  child: Container(
-                                    width: size.width * 0.9,
-                                    height: 50,
-                                    alignment: Alignment.center,
-                                    child: const Text(
-                                      'Find next day',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+
                         ],
                       ),
                     ),

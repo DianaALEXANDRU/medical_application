@@ -7,14 +7,14 @@ import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 
 
-class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+class MainWebScreen extends StatefulWidget {
+  const MainWebScreen({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<MainWebScreen> createState() => _MainWebScreenState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainWebScreenState extends State<MainWebScreen> {
   @override
   void initState() {
     super.initState();
@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
                 newState.user == null);
           },
           listener: (context, state) async {
-            GoRouter.of(context).go("/login");
+            GoRouter.of(context).go("/loginWeb");
           },
         ),
         BlocListener<AuthBloc, AuthState>(
@@ -49,41 +49,17 @@ class _MainPageState extends State<MainPage> {
           listener: (context, state) async {
             final role = getIt<AuthBloc>().state.user?.role;
 
-            if (role == 'user') {
-              getIt<MedicalBloc>().add(
-                FetchAppointmentsForUser(
-                    userId: getIt<AuthBloc>().state.user!.id),
-              );
+            if (role == 'administrator') {
+
               getIt<MedicalBloc>().add(
                 const FetchReviews(),
               );
-              getIt<MedicalBloc>().add(
-                const FetchDoctors(),
-              );
 
-
-              GoRouter.of(context).go("/patientHome");
+              GoRouter.of(context).go("/dashboard");
               return;
             }
-            if (role == 'doctor') {
-              getIt<MedicalBloc>().add(
-                FetchAppointmentsForDoctor(
-                    userId: getIt<AuthBloc>().state.user!.id),
-              );
-              getIt<MedicalBloc>().add(
-                const FetchUsers(),
-              );
-              getIt<MedicalBloc>().add(
-                FetchReviewsByDoctorId(
-                    doctorId: getIt<AuthBloc>().state.user!.id),
-              );
-              getIt<MedicalBloc>().add(
-                  FetchProgram(doctorId: getIt<AuthBloc>().state.user!.id));
 
-              GoRouter.of(context).go("/doctorHome");
-              return;
-            }
-            GoRouter.of(context).go("/login");
+            GoRouter.of(context).go("/loginWeb");
           },
         ),
       ],
@@ -91,7 +67,6 @@ class _MainPageState extends State<MainPage> {
         body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-
 
             return Container(
               color: Colors.white,

@@ -9,20 +9,19 @@ import '../../utill/helpers.dart';
 import 'components/drawer_menu.dart';
 import 'doctor_profile_content_screen.dart';
 
-class DoctorProfileScreen extends StatefulWidget {
+class DoctorProfileWebScreen extends StatefulWidget {
   final String doctorId;
 
-  const DoctorProfileScreen({Key? key, required this.doctorId})
+  const DoctorProfileWebScreen({Key? key, required this.doctorId})
       : super(key: key);
 
   @override
-  State<DoctorProfileScreen> createState() => _DoctorProfileScreenState();
+  State<DoctorProfileWebScreen> createState() => _DoctorProfileWebScreenState();
 }
 
-class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
+class _DoctorProfileWebScreenState extends State<DoctorProfileWebScreen> {
   @override
   Widget build(BuildContext context) {
-    print("###################### Doctor: ${widget.doctorId}");
     Doctor doctor = const Doctor(
         id: '',
         firstName: '',
@@ -33,7 +32,8 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
         description: '',
         experience: '',
         imageUrl: '',
-        category: '');
+        category: '',
+        available: true,);
     return BlocBuilder<MedicalBloc, MedicalState>(
       bloc: getIt<MedicalBloc>(),
       builder: (context, medicalState) {
@@ -47,7 +47,6 @@ class _DoctorProfileScreenState extends State<DoctorProfileScreen> {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (ResponsiveWidget.isLargeScreen(context))
                   const Expanded(
                     child: DrawerMenu(),
                   ),

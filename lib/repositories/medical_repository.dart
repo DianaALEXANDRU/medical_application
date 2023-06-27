@@ -11,6 +11,7 @@ import 'package:medical_application/models/user.dart';
 
 abstract class MedicalRepository {
   Future<List<Doctor>> fetchDoctors();
+  Future<List<Doctor>> fetchAvailableDoctors();
 
   Future<List<UserClass>> fetchUsers();
 
@@ -43,6 +44,7 @@ abstract class MedicalRepository {
   Future<Map<int, List<AppointmentHours>>> fetchProgram(String doctorId);
 
   Future<List<int>> fetchProgramDays(String doctorId);
+  Future< List<Program>> fetchProgramForAdmin(String doctorId);
 
   Future<void> makeAppointment(
       String patientId, String doctorId, DateTime date, String hour);
@@ -88,5 +90,12 @@ abstract class MedicalRepository {
 
   Future<void> deleteCategory(Category category);
 
+  Future<void> deleteProgram(String doctorid, String day, String start, String end);
+
   Future<void> editDoctorDetails(Doctor doctor, String category, String experience, String description);
+
+  Future<void> editDoctorAvailability(String doctorId, String availability);
+
+  Future<void> addOneProgram(Program program, String doctorId);
+
 }

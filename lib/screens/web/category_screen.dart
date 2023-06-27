@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:medical_application/screens/web/responsive_widget.dart';
-
 import 'category_content_screen.dart';
 import 'components/drawer_menu.dart';
 
@@ -21,12 +18,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
       body: SafeArea(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (ResponsiveWidget.isLargeScreen(context))
-              const Expanded(
+          children: const [
+              Expanded(
                 child: DrawerMenu(),
               ),
-            const Expanded(
+            Expanded(
               flex: 5,
               child: CategoryContentScreen(),
             )

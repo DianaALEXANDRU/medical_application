@@ -4,10 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:medical_application/bloc/medical_bloc.dart';
 import 'package:medical_application/main.dart';
 import 'package:medical_application/models/appointment.dart';
-import 'package:medical_application/screens/web/components/radial_painter.dart';
-import 'package:medical_application/utill/helpers.dart';
-
-import '../../../models/constants.dart';
 import 'chart.dart';
 
 class Last7DaysAppointmentsWidget extends StatelessWidget {
@@ -22,34 +18,14 @@ class Last7DaysAppointmentsWidget extends StatelessWidget {
     DateTime day2 = DateTime.now().subtract(const Duration(days: 5));
     DateTime day1 = DateTime.now().subtract(const Duration(days: 6));
 
-    print('########### day1 : $day1');
-    print('########### day2 : $day2');
-    print('########### day3 : $day3');
-    print('########### day4 : $day4');
-    print('########### day5 : $day5');
-    print('########### day6 : $day6');
-    print('########### day7 : $day7');
 
     var appDay1 = getAppByDate(allApp, day1);
-    print('APP in day1 : $appDay1');
-
     var appDay2 = getAppByDate(allApp, day2);
-    print('APP in day2 : $appDay2');
-
     var appDay3 = getAppByDate(allApp, day3);
-    print('APP in day3 : $appDay3');
-
     var appDay4 = getAppByDate(allApp, day4);
-    print('APP in day4 : $appDay4');
-
     var appDay5 = getAppByDate(allApp, day5);
-    print('APP in day5 : $appDay5');
-
     var appDay6 = getAppByDate(allApp, day6);
-    print('APP in day6 : $appDay6');
-
     var appDay7 = getAppByDate(allApp, day7);
-    print('APP in day7 : $appDay7');
 
     List<int> appInDays = [];
     appInDays.add(appDay1);
@@ -107,7 +83,7 @@ class Last7DaysAppointmentsWidget extends StatelessWidget {
                   margin: const EdgeInsets.all(16),
                   padding: const EdgeInsets.all(16),
                   height: 230,
-                  child: Center(
+                  child: const Center(
                     child: AppointmentsChartWidget(),
                   ),
                 ),
