@@ -1,16 +1,13 @@
 # medical_application
 
 A new Flutter project.
+MediBooking is an all-in-one Medical Booking and Management Solution suitable for three types of users: patients, doctors and medical administrators.
 
-## Getting Started
+The cross-platform application is built using Flutter and Firebase and has a modern and intuitive design, which makes its use very easy and pleasant to use.
 
-This project is a starting point for a Flutter application.
+It has useful functionalities created especially for the needs of the user, such as booking appointments, adding reviews for doctors, viewing the work schedule and appointments, managing doctors or the medical categories they belong to. 
 
-A few resources to get you started if this is your first Flutter project:
+The application also has charts with statistics that help the administrator to have a true picture of the clinic's evolution.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![image](https://github.com/DianaALEXANDRU/medical_application/assets/69734605/fa24f668-6fd6-471d-8afa-e36cd13681bb)
